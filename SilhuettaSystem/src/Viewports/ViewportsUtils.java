@@ -4,7 +4,7 @@
  */
 package Viewports;
 
-import Models.ClientsModel;
+import Models.EmployeesModel;
 import WebServices.WebServiceCep;
 import java.awt.Component;
 import javax.swing.JPanel;
@@ -23,20 +23,5 @@ public class ViewportsUtils {
                 ((JTextField)component).setText(null);
             }
         }
-    }
-    public ClientsModel fillAddressByCep(String CEP){
-        WebServiceCep webServiceCep = WebServiceCep.searchCep(CEP);
-        
-        System.out.println("Endereço encontrado: " + webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        
-        ClientsModel client = new ClientsModel();
-
-        if (webServiceCep.wasSuccessful()) {
-            client.setAddress(webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        } 
-        else {
-            client.setAddress("");            
-        }
-        return client;
     }
 }
