@@ -5,6 +5,7 @@
 package Viewports;
 
 import DAOs.EmployeesDAO;
+import Models.AddressModel;
 import Models.EmployeesModel;
 import WebServices.WebServiceCep;
 import java.awt.event.KeyEvent;
@@ -25,22 +26,6 @@ public class ViewportEmployees extends javax.swing.JFrame {
      */
     public ViewportEmployees() {
         initComponents();
-    }
-    
-    private EmployeesModel fillAddressByCep(String CEP){
-        WebServiceCep webServiceCep = WebServiceCep.searchCep(CEP);
-        
-        System.out.println("Endereço encontrado: " + webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        
-        EmployeesModel employee = new EmployeesModel();
-
-        if (webServiceCep.wasSuccessful()) {
-            employee.setAddress(webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        } 
-        else {
-            employee.setAddress("");            
-        }
-        return employee;
     }
 
     private void listTable() {
@@ -66,9 +51,10 @@ public class ViewportEmployees extends javax.swing.JFrame {
     }
 
     private void SearchAddress(String CEP) {
-        EmployeesModel c = new EmployeesModel();
+        AddressModel c = new AddressModel();
+        ViewportsUtils utils = new ViewportsUtils();
 
-        c = fillAddressByCep(CEP);
+        c = utils.fillAddressByCep(CEP);
 
         TXTEndereco.setText(c.getAddress());
     }
