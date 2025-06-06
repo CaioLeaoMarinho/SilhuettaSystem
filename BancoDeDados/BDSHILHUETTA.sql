@@ -35,10 +35,10 @@ CREATE TABLE tb_funcionarios (
   rg varchar (30),
   cpf varchar (20),
   email varchar(200),
-  senha varchar(10),
+  senha varchar(20),
   celular varchar(30),
   cep varchar(100),
-  endereco varchar (255),
+  endereco varchar (255)
 );
 /*****************/
 
@@ -46,13 +46,14 @@ CREATE TABLE tb_funcionarios (
 /***** TABELA PRODUTOS *****/
 CREATE TABLE tb_produtos (
   id int auto_increment primary key,
-  modelo varchar(100),
+  codigo varchar(100),
+  produto varchar(100),
   cor varchar(18),
+  tipo varchar(20),
+  tamanho varchar(20),
   preco decimal (10,2),
   qtd_estoque int,
-  for_id int,
-
-  FOREIGN KEY (for_id) REFERENCES tb_fornecedores(id)
+  fornecedor varchar(100)
 );
 /*****************/
 
@@ -62,6 +63,7 @@ CREATE TABLE tb_vendas (
   cliente_id int,
   data_venda datetime,
   total_venda decimal (10,2),
+  metodo_pag varchar(20),
   observacoes text,
 
   FOREIGN KEY (cliente_id) REFERENCES tb_clientes(id)

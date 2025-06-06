@@ -7,7 +7,6 @@ package Viewports;
 import DAOs.EmployeesDAO;
 import Models.AddressModel;
 import Models.EmployeesModel;
-import WebServices.WebServiceCep;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
