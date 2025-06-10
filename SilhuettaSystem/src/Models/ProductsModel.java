@@ -11,6 +11,7 @@ package Models;
 public class ProductsModel {
     private int id;
     private String code;
+    private String reference;
     private String product;
     private String color;
     private String type;
@@ -33,6 +34,14 @@ public class ProductsModel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+    
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public String getProduct() {

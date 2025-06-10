@@ -47,6 +47,7 @@ CREATE TABLE tb_funcionarios (
 CREATE TABLE tb_produtos (
   id int auto_increment primary key,
   codigo varchar(100),
+  referencia varchar(100),
   produto varchar(100),
   cor varchar(18),
   tipo varchar(20),

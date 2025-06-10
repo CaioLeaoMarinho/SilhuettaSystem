@@ -28,18 +28,19 @@ public class StockDAO {
     public void registerProduct(ProductsModel product){
         try
         {
-            String sql = "insert into tb_produtos(codigo,modelo, cor, tipo, tamanho, preco, qtd_estoque, fornecedor)"
-                    + " values(?,?,?,?,?,?,?,?)";
+            String sql = "insert into tb_produtos(codigo, referencia, produto, cor, tipo, tamanho, preco, qtd_estoque, fornecedor)"
+                    + " values(?,?,?,?,?,?,?,?,?)";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, product.getCode());
-            stmt.setString(2, product.getProduct());
-            stmt.setString(3, product.getColor());
-            stmt.setString(4, product.getType());
-            stmt.setString(5, product.getSize());
-            stmt.setDouble(6, product.getPrice());
-            stmt.setInt(7, product.getQuantity());
-            stmt.setString(8, product.getSupplier());
+            stmt.setString(2, product.getReference());
+            stmt.setString(3, product.getProduct());
+            stmt.setString(4, product.getColor());
+            stmt.setString(5, product.getType());
+            stmt.setString(6, product.getSize());
+            stmt.setDouble(7, product.getPrice());
+            stmt.setInt(8, product.getQuantity());
+            stmt.setString(9, product.getSupplier());
             
             stmt.execute();
             stmt.close();
@@ -56,18 +57,19 @@ public class StockDAO {
     public void updateProduct(ProductsModel product){
         try
         {
-            String sql = "update tb_produtos set codigo = ?, produto = ?, cor = ?, tipo = ?, tamanho = ?, preco = ?, qtd_estoque = ?, fornecedor = ? where id = ?";
+            String sql = "update tb_produtos set codigo = ?, referencia = ?, produto = ?, cor = ?, tipo = ?, tamanho = ?, preco = ?, qtd_estoque = ?, fornecedor = ? where id = ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, product.getCode());
-            stmt.setString(2, product.getProduct());
-            stmt.setString(3, product.getColor());
-            stmt.setString(4, product.getType());
-            stmt.setString(5, product.getSize());
-            stmt.setDouble(6, product.getPrice());
-            stmt.setInt(7, product.getQuantity());
-            stmt.setString(8, product.getSupplier());
-            stmt.setInt(9, product.getId());
+            stmt.setString(2, product.getReference());
+            stmt.setString(3, product.getProduct());
+            stmt.setString(4, product.getColor());
+            stmt.setString(5, product.getType());
+            stmt.setString(6, product.getSize());
+            stmt.setDouble(7, product.getPrice());
+            stmt.setInt(8, product.getQuantity());
+            stmt.setString(9, product.getSupplier());
+            stmt.setInt(10, product.getId());
             
             stmt.execute();
             stmt.close();
@@ -116,6 +118,7 @@ public class StockDAO {
                 
                 c.setId(rs.getInt("id"));
                 c.setCode(rs.getString("codigo"));
+                c.setReference(rs.getString("referencia"));
                 c.setProduct(rs.getString("produto"));
                 c.setColor(rs.getString("cor"));
                 c.setType(rs.getString("tipo"));
@@ -136,19 +139,20 @@ public class StockDAO {
     }
     
     
-    public List<ProductsModel> searchProductByFeatures(String productModel, String productCode, String productColor, String productType, String productSize, String productSupplier){
+    public List<ProductsModel> searchProductByFeatures(String productCode, String productReference, String productProduct, String productColor, String productType, String productSize, String productSupplier){
         try {
             List<ProductsModel> list = new ArrayList<>();
             
-            String sql = "select * from tb_produtos where codigo like ? and produto like ? and cor like ? and tipo like ? and tamanho like ? and fornecedor like ?";
+            String sql = "select * from tb_produtos where codigo like ? and referencia like ? and produto like ? and cor like ? and tipo like ? and tamanho like ? and fornecedor like ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, productCode);
-            stmt.setString(2, productModel);
-            stmt.setString(3, productColor);
-            stmt.setString(4, productType);
-            stmt.setString(5, productSize);
-            stmt.setString(6, productSupplier);
+            stmt.setString(2, productReference);
+            stmt.setString(3, productProduct);
+            stmt.setString(4, productColor);
+            stmt.setString(5, productType);
+            stmt.setString(6, productSize);
+            stmt.setString(7, productSupplier);
             
             ResultSet rs = stmt.executeQuery();
             
@@ -157,6 +161,7 @@ public class StockDAO {
                 
                 c.setId(rs.getInt("id"));
                 c.setCode(rs.getString("codigo"));
+                c.setReference(rs.getString("referencia"));
                 c.setProduct(rs.getString("produto"));
                 c.setColor(rs.getString("cor"));
                 c.setType(rs.getString("tipo"));
@@ -188,6 +193,7 @@ public class StockDAO {
             if(rs.next()){
                 c.setId(rs.getInt("id"));
                 c.setCode(rs.getString("codigo"));
+                c.setReference(rs.getString("referencia"));
                 c.setProduct(rs.getString("produto"));
                 c.setColor(rs.getString("cor"));
                 c.setType(rs.getString("tipo"));

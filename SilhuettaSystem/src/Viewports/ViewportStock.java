@@ -37,6 +37,7 @@ public class ViewportStock extends javax.swing.JFrame {
             tableData.addRow(new Object[]{
                 c.getId(),
                 c.getCode(),
+                c.getReference(),
                 c.getProduct(),
                 c.getColor(),
                 c.getType(),
@@ -49,7 +50,8 @@ public class ViewportStock extends javax.swing.JFrame {
     }
 
     private void FilteredList() {
-        String productCode = "%" + TXTFiltrarCodigo.getText() + "%";
+        String productCode = "%" + TXTFiltrarCodigoProduto.getText() + "%";
+        String productReference = "%" + TXTFiltrarReferencia.getText() + "%";
         String productProduct = "%" + TXTFiltrarProduto.getText() + "%";
         String productColor = "%" + TXTFiltrarCor.getText() + "%";
         String productType = "%" + TXTFiltrarTipo.getText() + "%";
@@ -57,7 +59,7 @@ public class ViewportStock extends javax.swing.JFrame {
         String productSupplier = "%" + TXTFiltrarFornecedor.getText() + "%";
 
         StockDAO dao = new StockDAO();
-        List<ProductsModel> list = dao.searchProductByFeatures(productProduct,productCode,productColor,productType,productSize,productSupplier);
+        List<ProductsModel> list = dao.searchProductByFeatures(productCode,productReference,productProduct,productColor,productType,productSize,productSupplier);
 
         DefaultTableModel tableData = (DefaultTableModel) TableListClients.getModel();
         tableData.setNumRows(0);
@@ -66,20 +68,42 @@ public class ViewportStock extends javax.swing.JFrame {
             tableData.addRow(new Object[]{
                 c.getId(),
                 c.getCode(),
+                c.getReference(),
                 c.getProduct(),
                 c.getColor(),
                 c.getType(),
                 c.getSize(),
-                c.getPrice(),
                 c.getSupplier(),
+                c.getPrice(),
                 c.getQuantity()
             });
         }
     }
     
-    private String getProductCode(String productSupplier, String productID, String productProduct, String productType, String productSize, String productColor){
-        String productCode = null;
-        return productCode;
+    private String getProductCode(String productReference, String productColor, String productType, String productSize, String productSupplier){
+        String sup = productSupplier;
+        String ref = productReference;
+        String type = productType.equalsIgnoreCase("slim") ? "S" : "P";
+        String size = productSize; 
+        String color = productColor.substring(0, 3);
+
+        return sup.toUpperCase() + ref + type + size.toUpperCase() + color.toUpperCase(); 
+    }
+    
+    private boolean HaveAllParameters(){
+        if (TXTProduto != null &&
+            TXTTipo != null &&
+            TXTReferencia != null &&
+            TXTCor != null &&
+            TXTTipo != null &&
+            TXTFornecedor != null &&
+            TXTPreco != null &&
+            TXTQuantidade != null){
+            
+            return true;
+        }
+        
+            return false;
     }
 
     /**
@@ -97,7 +121,7 @@ public class ViewportStock extends javax.swing.JFrame {
         MainTabbedPane = new javax.swing.JTabbedPane();
         ClientDataJPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        TXTCodigo = new javax.swing.JTextField();
+        TXTID = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         TXTProduto = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -108,16 +132,17 @@ public class ViewportStock extends javax.swing.JFrame {
         TXTQuantidade = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         TXTCor = new javax.swing.JTextField();
-        PesquisarButton = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         TXTCodigoProduto = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         TXTPreco = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         TXTFornecedor = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        TXTReferencia = new javax.swing.JTextField();
         ConsultJPanel = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        TXTFiltrarCodigo = new javax.swing.JTextField();
+        TXTFiltrarCodigoProduto = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         TableListClients = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
@@ -130,6 +155,8 @@ public class ViewportStock extends javax.swing.JFrame {
         TXTFiltrarTamanho = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         TXTFiltrarFornecedor = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        TXTFiltrarReferencia = new javax.swing.JTextField();
         EDITARButton = new javax.swing.JButton();
         EXCLUIRButton = new javax.swing.JButton();
         NOVOButton = new javax.swing.JButton();
@@ -170,14 +197,14 @@ public class ViewportStock extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Código:");
+        jLabel1.setText("ID:");
 
-        TXTCodigo.setEditable(false);
-        TXTCodigo.setBackground(new java.awt.Color(204, 204, 204));
-        TXTCodigo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        TXTCodigo.setForeground(new java.awt.Color(0, 0, 0));
-        TXTCodigo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        TXTCodigo.setFocusable(false);
+        TXTID.setEditable(false);
+        TXTID.setBackground(new java.awt.Color(204, 204, 204));
+        TXTID.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TXTID.setForeground(new java.awt.Color(0, 0, 0));
+        TXTID.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        TXTID.setFocusable(false);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -237,29 +264,19 @@ public class ViewportStock extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Cor:");
+        jLabel7.setText("Cor :");
 
         TXTCor.setBackground(new java.awt.Color(255, 255, 255));
         TXTCor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TXTCor.setForeground(new java.awt.Color(0, 0, 0));
         TXTCor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        PesquisarButton.setBackground(new java.awt.Color(192, 179, 166));
-        PesquisarButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        PesquisarButton.setForeground(new java.awt.Color(0, 0, 0));
-        PesquisarButton.setText("Pesquisar");
-        PesquisarButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        PesquisarButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PesquisarButtonActionPerformed(evt);
-            }
-        });
-
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setText("Código de Produto:");
 
-        TXTCodigoProduto.setBackground(new java.awt.Color(255, 255, 255));
+        TXTCodigoProduto.setEditable(false);
+        TXTCodigoProduto.setBackground(new java.awt.Color(204, 204, 204));
         TXTCodigoProduto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TXTCodigoProduto.setForeground(new java.awt.Color(0, 0, 0));
         TXTCodigoProduto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -293,6 +310,20 @@ public class ViewportStock extends javax.swing.JFrame {
             }
         });
 
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("Referência:");
+
+        TXTReferencia.setBackground(new java.awt.Color(255, 255, 255));
+        TXTReferencia.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TXTReferencia.setForeground(new java.awt.Color(0, 0, 0));
+        TXTReferencia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        TXTReferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TXTReferenciaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ClientDataJPanelLayout = new javax.swing.GroupLayout(ClientDataJPanel);
         ClientDataJPanel.setLayout(ClientDataJPanelLayout);
         ClientDataJPanelLayout.setHorizontalGroup(
@@ -305,43 +336,38 @@ public class ViewportStock extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TXTCodigoProduto, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                            .addComponent(TXTCodigo))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PesquisarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ClientDataJPanelLayout.createSequentialGroup()
+                        .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TXTCodigoProduto)
+                            .addComponent(TXTID)))
+                    .addGroup(ClientDataJPanelLayout.createSequentialGroup()
+                        .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel16)
+                            .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addGap(18, 18, 18)
                         .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(ClientDataJPanelLayout.createSequentialGroup()
-                                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(TXTReferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TXTTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TXTFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TXTProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(ClientDataJPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(18, 18, 18)
-                                .addComponent(TXTTamanho)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ClientDataJPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
+                                .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TXTQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ClientDataJPanelLayout.createSequentialGroup()
-                                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TXTPreco, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                                    .addComponent(TXTCor))))
-                        .addGap(168, 168, 168))))
+                                .addComponent(TXTCor, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
+                            .addComponent(TXTTipo)
+                            .addComponent(TXTTamanho)
+                            .addComponent(TXTProduto)
+                            .addComponent(TXTFornecedor))))
+                .addGap(39, 39, 39)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(TXTPreco)
+                    .addComponent(TXTQuantidade, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
+                .addGap(127, 127, 127))
         );
         ClientDataJPanelLayout.setVerticalGroup(
             ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,38 +375,43 @@ public class ViewportStock extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(TXTCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TXTID, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(TXTCodigoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PesquisarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(111, 111, 111)
-                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(TXTProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXTCodigoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(59, 59, 59)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TXTPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(TXTPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)))
+                        .addComponent(jLabel2)
+                        .addComponent(TXTProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9)))
                 .addGap(18, 18, 18)
                 .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(TXTTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TXTCor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(TXTTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel7)
+                        .addComponent(TXTCor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(TXTReferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel16)))
                 .addGap(18, 18, 18)
                 .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(TXTQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(TXTTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
-                        .addComponent(TXTFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addComponent(TXTFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(TXTQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         MainTabbedPane.addTab("Dados Pessoais", ClientDataJPanel);
@@ -390,15 +421,15 @@ public class ViewportStock extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setText("Codigo:");
+        jLabel8.setText("Codigo.P:");
 
-        TXTFiltrarCodigo.setBackground(new java.awt.Color(255, 255, 255));
-        TXTFiltrarCodigo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        TXTFiltrarCodigo.setForeground(new java.awt.Color(0, 0, 0));
-        TXTFiltrarCodigo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        TXTFiltrarCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+        TXTFiltrarCodigoProduto.setBackground(new java.awt.Color(255, 255, 255));
+        TXTFiltrarCodigoProduto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TXTFiltrarCodigoProduto.setForeground(new java.awt.Color(0, 0, 0));
+        TXTFiltrarCodigoProduto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        TXTFiltrarCodigoProduto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                TXTFiltrarCodigoKeyPressed(evt);
+                TXTFiltrarCodigoProdutoKeyPressed(evt);
             }
         });
 
@@ -407,13 +438,13 @@ public class ViewportStock extends javax.swing.JFrame {
         TableListClients.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TableListClients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Código", "Produto", "Cor", "Tipo", "Tamanho", "Fornecedor", "Preço", "Quantidade"
+                "ID", "Código", "Referencia", "Produto", "Cor", "Tipo", "Tamanho", "Fornecedor", "Preço", "Quantidade"
             }
         ));
         TableListClients.setGridColor(new java.awt.Color(255, 255, 255));
@@ -448,6 +479,11 @@ public class ViewportStock extends javax.swing.JFrame {
         TXTFiltrarCor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TXTFiltrarCor.setForeground(new java.awt.Color(0, 0, 0));
         TXTFiltrarCor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        TXTFiltrarCor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TXTFiltrarCorActionPerformed(evt);
+            }
+        });
         TXTFiltrarCor.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TXTFiltrarCorKeyPressed(evt);
@@ -496,6 +532,20 @@ public class ViewportStock extends javax.swing.JFrame {
             }
         });
 
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel17.setText("Referencia:");
+
+        TXTFiltrarReferencia.setBackground(new java.awt.Color(255, 255, 255));
+        TXTFiltrarReferencia.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TXTFiltrarReferencia.setForeground(new java.awt.Color(0, 0, 0));
+        TXTFiltrarReferencia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        TXTFiltrarReferencia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TXTFiltrarReferenciaKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ConsultJPanelLayout = new javax.swing.GroupLayout(ConsultJPanel);
         ConsultJPanel.setLayout(ConsultJPanelLayout);
         ConsultJPanelLayout.setHorizontalGroup(
@@ -504,34 +554,41 @@ public class ViewportStock extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ConsultJPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(ConsultJPanelLayout.createSequentialGroup()
                         .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel13))
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel17))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(TXTFiltrarTipo)
-                            .addComponent(TXTFiltrarCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                            .addComponent(TXTFiltrarCodigoProduto, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(TXTFiltrarReferencia))
                         .addGap(18, 18, 18)
                         .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(ConsultJPanelLayout.createSequentialGroup()
-                                .addComponent(TXTFiltrarTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                                .addComponent(jLabel15))
+                                .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel11))
+                                .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(ConsultJPanelLayout.createSequentialGroup()
+                                        .addGap(214, 214, 214)
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(TXTFiltrarCor))
+                                    .addGroup(ConsultJPanelLayout.createSequentialGroup()
+                                        .addGap(15, 15, 15)
+                                        .addComponent(TXTFiltrarProduto))))
                             .addGroup(ConsultJPanelLayout.createSequentialGroup()
-                                .addComponent(TXTFiltrarProduto)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel12)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TXTFiltrarCor)
-                            .addComponent(TXTFiltrarFornecedor, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE))
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(ConsultJPanelLayout.createSequentialGroup()
+                                        .addComponent(TXTFiltrarTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(TXTFiltrarFornecedor))))
                         .addGap(47, 47, 47))))
         );
         ConsultJPanelLayout.setVerticalGroup(
@@ -540,21 +597,25 @@ public class ViewportStock extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(TXTFiltrarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXTFiltrarCodigoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(TXTFiltrarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(TXTFiltrarCor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TXTFiltrarProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(TXTFiltrarTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14)
                     .addComponent(TXTFiltrarTamanho, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(TXTFiltrarCor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(ConsultJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(TXTFiltrarReferencia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15)
                     .addComponent(TXTFiltrarFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -653,17 +714,18 @@ public class ViewportStock extends javax.swing.JFrame {
     }//GEN-LAST:event_TXTProdutoActionPerformed
 
     private void EDITARButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EDITARButtonActionPerformed
-        if (TXTProduto.getText() != null && TXTPreco.getText() != null) {
+        if (HaveAllParameters()) {
             try {
                 ProductsModel currentProduct = new ProductsModel();
 
-                currentProduct.setId(Integer.parseInt(TXTCodigo.getText()));
-                //currentProduct.setCode(getProductCode());
+                currentProduct.setId(Integer.parseInt(TXTID.getText()));
+                currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
+                currentProduct.setReference(TXTReferencia.getText());
                 currentProduct.setProduct(TXTProduto.getText());
                 currentProduct.setColor(TXTCor.getText());
                 currentProduct.setType(TXTTipo.getText());
                 currentProduct.setSize(TXTTamanho.getText());
-                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText()));
+                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
                 currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
                 currentProduct.setSupplier(TXTFornecedor.getText());
 
@@ -672,19 +734,19 @@ public class ViewportStock extends javax.swing.JFrame {
                 dao.updateProduct(currentProduct);
 
             } catch (Exception e) {
-                return;
+                JOptionPane.showMessageDialog(null, "FALHA ao EDITAR Produto: " + e);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Erro: Produto e/ou Preco inválidos.");
+            JOptionPane.showMessageDialog(null, "Erro: Produto e/ou Preco invalidos.");
         }
     }//GEN-LAST:event_EDITARButtonActionPerformed
 
     private void EXCLUIRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EXCLUIRButtonActionPerformed
-        if (TXTProduto.getText() != null && TXTCor.getText() != null) {
+        if (TXTID.getText() != null) {
             try {
                 ProductsModel currentProduct = new ProductsModel();
 
-                currentProduct.setId(Integer.parseInt(TXTCodigo.getText()));
+                currentProduct.setId(Integer.parseInt(TXTID.getText()));
 
                 StockDAO dao = new StockDAO();
 
@@ -692,24 +754,25 @@ public class ViewportStock extends javax.swing.JFrame {
 
                 new ViewportsUtils().clearPanel(ClientDataJPanel);
             } catch (Exception e) {
-                return;
+                JOptionPane.showMessageDialog(null, "FALHA ao EXCLUIR Produto: " + e);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Erro: Nome e/ou um CPF válidos.");
+            JOptionPane.showMessageDialog(null, "Erro: ID invalido.");
         }
     }//GEN-LAST:event_EXCLUIRButtonActionPerformed
 
     private void NOVOButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NOVOButtonActionPerformed
-        if (TXTProduto.getText() != null && TXTPreco.getText() != null) {
+        if (HaveAllParameters()) {
             try {
                 ProductsModel currentProduct = new ProductsModel();
                 
-                //currentProduct.setCode(getProductCode());
+                currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
+                currentProduct.setReference(TXTReferencia.getText());
                 currentProduct.setProduct(TXTProduto.getText());
                 currentProduct.setColor(TXTCor.getText());
-                currentProduct.setType(TXTPreco.getText());
+                currentProduct.setType(TXTTipo.getText());
                 currentProduct.setSize(TXTTamanho.getText());
-                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText()));
+                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
                 currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
                 currentProduct.setSupplier(TXTFornecedor.getText());
 
@@ -719,10 +782,10 @@ public class ViewportStock extends javax.swing.JFrame {
 
                 new ViewportsUtils().clearPanel(ClientDataJPanel);
             } catch (Exception e) {
-                return;
+                JOptionPane.showMessageDialog(null, "FALHA ao CADASTRAR Produto: " + e);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Erro: Nome e/ou um CPF válidos.");
+            JOptionPane.showMessageDialog(null, "Erro: Algum dado faltando.");
         }
     }//GEN-LAST:event_NOVOButtonActionPerformed
 
@@ -731,38 +794,23 @@ public class ViewportStock extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowActivated
 
     private void TableListClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableListClientsMouseClicked
-        TXTCodigo.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 0).toString());
-        TXTProduto.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 1).toString());
-        TXTCor.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 2).toString());
-        TXTTipo.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 4).toString());
-        TXTTamanho.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 5).toString());
-        TXTQuantidade.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 6).toString());
+        TXTID.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 0).toString());
+        TXTCodigoProduto.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 1).toString());
+        TXTReferencia.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 2).toString());
+        TXTProduto.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 3).toString());
+        TXTCor.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 4).toString());
+        TXTTipo.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 5).toString());
+        TXTTamanho.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 6).toString());
+        TXTFornecedor.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 7).toString());
+        TXTPreco.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 8).toString());
+        TXTQuantidade.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 9).toString());
 
         MainTabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_TableListClientsMouseClicked
 
-    private void TXTFiltrarCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTFiltrarCodigoKeyPressed
+    private void TXTFiltrarCodigoProdutoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTFiltrarCodigoProdutoKeyPressed
         FilteredList();
-    }//GEN-LAST:event_TXTFiltrarCodigoKeyPressed
-
-    private void PesquisarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PesquisarButtonActionPerformed
-        String productCode = TXTCodigoProduto.getText();
-        ProductsModel product = new ProductsModel();
-        StockDAO dao = new StockDAO();
-
-        product = dao.consultProductByCode(productCode);
-
-        if (product.getProduct() != null) {
-            TXTCodigo.setText(String.valueOf(product.getId()));
-            TXTProduto.setText(product.getProduct());
-            TXTCor.setText(product.getColor());
-            TXTTipo.setText(product.getType());
-            TXTTamanho.setText(product.getSize());
-            TXTQuantidade.setText(String.valueOf(product.getQuantity()));
-        } else {
-            JOptionPane.showMessageDialog(null, "FALHA ao ENCONTRAR Cliente de codigo: " + productCode);
-        }
-    }//GEN-LAST:event_PesquisarButtonActionPerformed
+    }//GEN-LAST:event_TXTFiltrarCodigoProdutoKeyPressed
 
     private void TXTTamanhoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTTamanhoKeyPressed
 
@@ -796,6 +844,18 @@ public class ViewportStock extends javax.swing.JFrame {
         FilteredList();
     }//GEN-LAST:event_TXTFiltrarFornecedorKeyPressed
 
+    private void TXTReferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTReferenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TXTReferenciaActionPerformed
+
+    private void TXTFiltrarReferenciaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTFiltrarReferenciaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TXTFiltrarReferenciaKeyPressed
+
+    private void TXTFiltrarCorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTFiltrarCorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TXTFiltrarCorActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -828,20 +888,21 @@ public class ViewportStock extends javax.swing.JFrame {
     private javax.swing.JButton EXCLUIRButton;
     private javax.swing.JTabbedPane MainTabbedPane;
     private javax.swing.JButton NOVOButton;
-    private javax.swing.JButton PesquisarButton;
-    private javax.swing.JTextField TXTCodigo;
     private javax.swing.JTextField TXTCodigoProduto;
     private javax.swing.JTextField TXTCor;
-    private javax.swing.JTextField TXTFiltrarCodigo;
+    private javax.swing.JTextField TXTFiltrarCodigoProduto;
     private javax.swing.JTextField TXTFiltrarCor;
     private javax.swing.JTextField TXTFiltrarFornecedor;
     private javax.swing.JTextField TXTFiltrarProduto;
+    private javax.swing.JTextField TXTFiltrarReferencia;
     private javax.swing.JTextField TXTFiltrarTamanho;
     private javax.swing.JTextField TXTFiltrarTipo;
     private javax.swing.JTextField TXTFornecedor;
+    private javax.swing.JTextField TXTID;
     private javax.swing.JTextField TXTPreco;
     private javax.swing.JTextField TXTProduto;
     private javax.swing.JTextField TXTQuantidade;
+    private javax.swing.JTextField TXTReferencia;
     private javax.swing.JTextField TXTTamanho;
     private javax.swing.JTextField TXTTipo;
     private javax.swing.JTable TableListClients;
@@ -852,6 +913,8 @@ public class ViewportStock extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
