@@ -849,11 +849,11 @@ public class ViewportStock extends javax.swing.JFrame {
     }//GEN-LAST:event_TXTReferenciaActionPerformed
 
     private void TXTFiltrarReferenciaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTFiltrarReferenciaKeyPressed
-        // TODO add your handling code here:
+        FilteredList();
     }//GEN-LAST:event_TXTFiltrarReferenciaKeyPressed
 
     private void TXTFiltrarCorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTFiltrarCorActionPerformed
-        // TODO add your handling code here:
+        FilteredList();
     }//GEN-LAST:event_TXTFiltrarCorActionPerformed
 
     /**
