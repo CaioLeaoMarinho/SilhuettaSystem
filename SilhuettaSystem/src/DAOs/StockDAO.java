@@ -133,20 +133,20 @@ public class StockDAO {
             return list;
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "FALHA ao LISTAR Clientes: " + e);
+            JOptionPane.showMessageDialog(null, "FALHA ao LISTAR Produtos: " + e);
             return null;
         }
     }
     
     
-    public List<ProductsModel> searchProductByFeatures(String productCode, String productReference, String productProduct, String productColor, String productType, String productSize, String productSupplier){
+    public List<ProductsModel> searchProductByFeatures(String productID, String productReference, String productProduct, String productColor, String productType, String productSize, String productSupplier){
         try {
             List<ProductsModel> list = new ArrayList<>();
             
-            String sql = "select * from tb_produtos where codigo like ? and referencia like ? and produto like ? and cor like ? and tipo like ? and tamanho like ? and fornecedor like ?";
+            String sql = "select * from tb_produtos where id like ? and referencia like ? and produto like ? and cor like ? and tipo like ? and tamanho like ? and fornecedor like ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, productCode);
+            stmt.setString(1, productID);
             stmt.setString(2, productReference);
             stmt.setString(3, productProduct);
             stmt.setString(4, productColor);
@@ -176,16 +176,16 @@ public class StockDAO {
             return list;
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "FALHA ao LISTAR Produtos: " + e);
+            JOptionPane.showMessageDialog(null, "FALHA ao FILTRAR Produtos: " + e);
             return null;
         }
     }
     
-    public ProductsModel consultProductByCode(String productCode){
+    public ProductsModel consultProductByID(int productID){
         try{
-            String sql = "select * from tb_produtos where codigo = ?";
+            String sql = "select * from tb_produtos where id = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, productCode);
+            stmt.setInt(1, productID);
             
             ResultSet rs = stmt.executeQuery();
             
@@ -205,7 +205,7 @@ public class StockDAO {
             return c;
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "FALHA ao ENCONTRAR Cliente: " + e);
+            JOptionPane.showMessageDialog(null, "FALHA ao ENCONTRAR Produto: " + e);
             return null;
         }
     }

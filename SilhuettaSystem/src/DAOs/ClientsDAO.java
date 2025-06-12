@@ -130,14 +130,14 @@ public class ClientsDAO {
     }
     
     
-    public List<ClientsModel> searchClientsByName(String clientCPF){
+    public List<ClientsModel> searchClientsByName(String clientName){
         try {
             List<ClientsModel> list = new ArrayList<>();
             
-            String sql = "select * from tb_clientes where cpf like ?";
+            String sql = "select * from tb_clientes where nome like ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, clientCPF);
+            stmt.setString(1, clientName);
             
             ResultSet rs = stmt.executeQuery();
             
@@ -164,11 +164,11 @@ public class ClientsDAO {
     }
     
     
-    public ClientsModel consultClientByName(String clientName){
+    public ClientsModel consultClientByCPF(String clientCPF){
         try{
-            String sql = "select * from tb_clientes where nome = ?";
+            String sql = "select * from tb_clientes where cpf = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, clientName);
+            stmt.setString(1, clientCPF);
             
             ResultSet rs = stmt.executeQuery();
             

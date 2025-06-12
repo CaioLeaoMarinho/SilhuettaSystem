@@ -626,7 +626,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="TXTFiltrarTipo" max="32767" attributes="0"/>
-                                      <Component id="TXTFiltrarCodigoProduto" pref="500" max="32767" attributes="0"/>
+                                      <Component id="TXTFiltrarIDProduto" pref="500" max="32767" attributes="0"/>
                                       <Component id="TXTFiltrarReferencia" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -673,7 +673,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="TXTFiltrarCodigoProduto" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="TXTFiltrarIDProduto" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="TXTFiltrarProduto" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           </Group>
@@ -709,10 +709,10 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Codigo.P:"/>
+                    <Property name="text" type="java.lang.String" value="ID:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="TXTFiltrarCodigoProduto">
+                <Component class="javax.swing.JTextField" name="TXTFiltrarIDProduto">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -730,7 +730,7 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TXTFiltrarCodigoProdutoKeyPressed"/>
+                    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="TXTFiltrarIDProdutoKeyPressed"/>
                   </Events>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane1">
