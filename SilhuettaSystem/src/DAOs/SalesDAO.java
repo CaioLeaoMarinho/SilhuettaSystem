@@ -58,7 +58,7 @@ public class SalesDAO {
         try{
             int id = 0;
             
-            String sql = "select max(id) id from tb_vendas";
+            String sql = "select max(id) id from tb_vendas;";
             PreparedStatement stmt = con.prepareStatement(sql);
             
             ResultSet rs = stmt.executeQuery();
@@ -70,7 +70,6 @@ public class SalesDAO {
                 
                 id = c.getID();
             }
-            
             return id;
         }catch(SQLException e){
             throw new RuntimeException(e);

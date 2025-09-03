@@ -4,6 +4,7 @@
  */
 package Viewports;
 
+import DAOs.ItemSalesDAO;
 import DAOs.SalesDAO;
 import Models.ItensSalesModel;
 import Models.ProductsModel;
@@ -18,8 +19,8 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportConfirmSale.class.getName());
 
-    private double totalPrice, totalDiscount, totalPaid;
-    private int discountAmount = 5;
+    private double totalPrice, totalDiscount = 0, totalPaid;
+    private double discountAmount = 5.0;
     
     // SALE DATA:
     public String client_name;
@@ -92,7 +93,7 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
         this.cart = cart;
         
         if (isDiscount){
-            this.totalDiscount = totalInCash - (totalInCash * (discountAmount / 100)) - totalInCash;
+            this.totalDiscount = totalInCash * (this.discountAmount / 100.0);
         }
     }
 
@@ -266,7 +267,7 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
             LABELTXTTotalComDesconto.setEnabled(false);
         }
         
-        LABELTroco.setText(String.valueOf((totalPrice - totalDiscount) - totalPaid));
+        LABELTroco.setText(String.valueOf(((totalPrice - totalDiscount) - totalPaid) * -1));
     }//GEN-LAST:event_formWindowActivated
 
     private void BUTTONFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONFinalizarActionPerformed
@@ -301,6 +302,9 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
             item.setProduct(product);
             item.setQuantity(Integer.parseInt(cart.getValueAt(i, 2).toString()));
             item.setSubtotal(Double.parseDouble(cart.getValueAt(i, 4).toString()));
+            
+            ItemSalesDAO itemSalesDAO = new ItemSalesDAO();
+            itemSalesDAO.registerItemSale(item);
         }
     }//GEN-LAST:event_BUTTONFinalizarActionPerformed
 
