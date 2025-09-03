@@ -7,32 +7,47 @@ package Viewports;
 import DAOs.ClientsDAO;
 import DAOs.StockDAO;
 import Models.ClientsModel;
+import Models.NumberFilterDocument;
 import Models.ProductsModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
  * @author caiol
  */
-public class ViewportVendas extends javax.swing.JFrame {
-    
+public class ViewportSales extends javax.swing.JFrame {
+
     double total, price, subtotal;
     int quantity;
-    
+
     DefaultTableModel cart;
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportVendas.class.getName());
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportSales.class.getName());
 
     /**
      * Creates new form ViewportVendas
      */
-    public ViewportVendas() {
+    public ViewportSales() {
         initComponents();
+        
+        ((AbstractDocument) TXTCPFCliente.getDocument()).setDocumentFilter(new NumberFilterDocument());
+        ((AbstractDocument) TXTID.getDocument()).setDocumentFilter(new NumberFilterDocument());
+        ((AbstractDocument) TXTQuantidade.getDocument()).setDocumentFilter(new NumberFilterDocument());
     }
 
+    private boolean CarrinhoIsEmpty(){
+        if (TabelaCarrinho.getRowCount() > 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,8 +67,13 @@ public class ViewportVendas extends javax.swing.JFrame {
         TXTNomeCliente = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        TabelaCarrinho = new javax.swing.JTable();
+        TabelaCarrinho = new javax.swing.JTable() {
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
         jLabel9 = new javax.swing.JLabel();
+        BUTTONDeletarRow = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         TXTID = new javax.swing.JTextField();
@@ -64,18 +84,18 @@ public class ViewportVendas extends javax.swing.JFrame {
         TXTCor = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         TXTPreco = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        BUTTONAdicionarItem = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         TXTQuantidade = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        BUTTONStock = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         TXTTotal = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        BUTTONPagamento = new javax.swing.JButton();
+        BUTTONCancelar = new javax.swing.JButton();
         LABELData = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -187,6 +207,11 @@ public class ViewportVendas extends javax.swing.JFrame {
                 "ID", "Produto", "Qtd.", "Preço", "Subtotal"
             }
         ));
+        TabelaCarrinho.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabelaCarrinhoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TabelaCarrinho);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -194,6 +219,18 @@ public class ViewportVendas extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/CarrinhoPreto_Vazio.png"))); // NOI18N
         jLabel9.setText("CARRINHO");
+
+        BUTTONDeletarRow.setBackground(new java.awt.Color(192, 179, 166));
+        BUTTONDeletarRow.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        BUTTONDeletarRow.setForeground(new java.awt.Color(0, 0, 0));
+        BUTTONDeletarRow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/LixoPreto.png"))); // NOI18N
+        BUTTONDeletarRow.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONDeletarRow.setFocusPainted(false);
+        BUTTONDeletarRow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BUTTONDeletarRowActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -205,6 +242,10 @@ public class ViewportVendas extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BUTTONDeletarRow, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +253,9 @@ public class ViewportVendas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BUTTONDeletarRow, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -267,20 +310,22 @@ public class ViewportVendas extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Preço/uni:");
 
-        TXTPreco.setBackground(new java.awt.Color(255, 255, 255));
+        TXTPreco.setEditable(false);
+        TXTPreco.setBackground(new java.awt.Color(204, 204, 204));
         TXTPreco.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         TXTPreco.setForeground(new java.awt.Color(0, 0, 102));
         TXTPreco.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton2.setBackground(new java.awt.Color(192, 179, 166));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/CarrinhoPreto_Add.png"))); // NOI18N
-        jButton2.setText("Adicionar Item");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        BUTTONAdicionarItem.setBackground(new java.awt.Color(192, 179, 166));
+        BUTTONAdicionarItem.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        BUTTONAdicionarItem.setForeground(new java.awt.Color(0, 0, 0));
+        BUTTONAdicionarItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/CarrinhoPreto_Add.png"))); // NOI18N
+        BUTTONAdicionarItem.setText("Adicionar Item");
+        BUTTONAdicionarItem.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONAdicionarItem.setFocusPainted(false);
+        BUTTONAdicionarItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                BUTTONAdicionarItemActionPerformed(evt);
             }
         });
 
@@ -293,14 +338,14 @@ public class ViewportVendas extends javax.swing.JFrame {
         TXTQuantidade.setForeground(new java.awt.Color(0, 0, 0));
         TXTQuantidade.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton1.setBackground(new java.awt.Color(149, 117, 47));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Produtos.png"))); // NOI18N
-        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        BUTTONStock.setBackground(new java.awt.Color(149, 117, 47));
+        BUTTONStock.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        BUTTONStock.setForeground(new java.awt.Color(0, 0, 0));
+        BUTTONStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Produtos.png"))); // NOI18N
+        BUTTONStock.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        BUTTONStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                BUTTONStockActionPerformed(evt);
             }
         });
 
@@ -311,13 +356,13 @@ public class ViewportVendas extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BUTTONAdicionarItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(BUTTONStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(TXTProduto)
@@ -359,12 +404,13 @@ public class ViewportVendas extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(TXTPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(TXTQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BUTTONStock, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(TXTQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BUTTONAdicionarItem, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -380,17 +426,28 @@ public class ViewportVendas extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("TOTAL:");
 
-        jButton4.setBackground(new java.awt.Color(149, 117, 47));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 0, 0));
-        jButton4.setText("PAGAMENTO");
-        jButton4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONPagamento.setBackground(new java.awt.Color(149, 117, 47));
+        BUTTONPagamento.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        BUTTONPagamento.setForeground(new java.awt.Color(0, 0, 0));
+        BUTTONPagamento.setText("PAGAMENTO");
+        BUTTONPagamento.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONPagamento.setFocusPainted(false);
+        BUTTONPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BUTTONPagamentoActionPerformed(evt);
+            }
+        });
 
-        jButton5.setBackground(new java.awt.Color(149, 117, 47));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(153, 0, 0));
-        jButton5.setText("CANCELAR");
-        jButton5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONCancelar.setBackground(new java.awt.Color(149, 117, 47));
+        BUTTONCancelar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        BUTTONCancelar.setForeground(new java.awt.Color(153, 0, 0));
+        BUTTONCancelar.setText("CANCELAR");
+        BUTTONCancelar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        BUTTONCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BUTTONCancelarActionPerformed(evt);
+            }
+        });
 
         LABELData.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         LABELData.setForeground(new java.awt.Color(0, 0, 0));
@@ -405,9 +462,9 @@ public class ViewportVendas extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BUTTONPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(BUTTONCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
@@ -417,7 +474,7 @@ public class ViewportVendas extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton4, jButton5});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {BUTTONCancelar, BUTTONPagamento});
 
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,12 +486,12 @@ public class ViewportVendas extends javax.swing.JFrame {
                     .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BUTTONPagamento)
+                    .addComponent(BUTTONCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton4, jButton5});
+        jPanel6Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {BUTTONCancelar, BUTTONPagamento});
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -482,29 +539,33 @@ public class ViewportVendas extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.quantity = Integer.parseInt(TXTQuantidade.getText());
-        this.price = Double.parseDouble(TXTPreco.getText());
-        
-        this.subtotal = quantity * price;
-        this.total += this.subtotal;
-        
-        TXTTotal.setText(String.valueOf(this.total));
-        
-        
-        
-        this.cart = (DefaultTableModel)TabelaCarrinho.getModel();
-        
-        this.cart.addRow(new Object[]{
-            TXTID.getText(),
-            TXTProduto.getText(),
-            TXTQuantidade.getText(),
-            TXTPreco.getText(),
-            subtotal
-        });
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void BUTTONAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONAdicionarItemActionPerformed
+        if (Integer.parseInt(TXTQuantidade.getText()) > 0 && TXTQuantidade.getText() != null) {
+            this.quantity = Integer.parseInt(TXTQuantidade.getText());
+            this.price = Double.parseDouble(TXTPreco.getText());
+
+            this.subtotal = quantity * price;
+            this.total += this.subtotal;
+
+            TXTTotal.setText(String.valueOf(this.total));
+
+            this.cart = (DefaultTableModel) TabelaCarrinho.getModel();
+
+            this.cart.addRow(new Object[]{
+                TXTID.getText(),
+                TXTProduto.getText(),
+                TXTQuantidade.getText(),
+                TXTPreco.getText(),
+                subtotal
+            });
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Insira uma quantidade do produto");
+        }
+    }//GEN-LAST:event_BUTTONAdicionarItemActionPerformed
 
     private void TXTIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTIDActionPerformed
         // TODO add your handling code here:
@@ -520,10 +581,10 @@ public class ViewportVendas extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         Date date = new Date();
-        
+
         SimpleDateFormat dateBR = new SimpleDateFormat("dd/MM/yyyy");
         String dateFormated = dateBR.format(date);
-        
+
         LABELData.setText(dateFormated);
     }//GEN-LAST:event_formWindowActivated
 
@@ -557,9 +618,47 @@ public class ViewportVendas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BUTTONPesquisarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void BUTTONStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONStockActionPerformed
+        ViewportStock viewS = new ViewportStock();
+        viewS.MainTabbedPane.setSelectedIndex(1);
+
+        viewS.setVisible(true);
+    }//GEN-LAST:event_BUTTONStockActionPerformed
+
+    private void BUTTONPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONPagamentoActionPerformed
+        if (TabelaCarrinho.getRowCount() > 0){
+            Date date = new Date();
+            SimpleDateFormat dateEUA = new SimpleDateFormat("yyyy-MM-dd");
+            String dateFormated = dateEUA.format(date);
+            
+            ViewportPayments viewP = new ViewportPayments(Double.parseDouble(TXTTotal.getText()), TXTNomeCliente.getText(), TXTCPFCliente.getText(), dateFormated, this.cart);
+            
+            viewP.setVisible(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Sem produtos no Carrinho");
+        }
+    }//GEN-LAST:event_BUTTONPagamentoActionPerformed
+
+    private void BUTTONDeletarRowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONDeletarRowActionPerformed
+        if(TabelaCarrinho.getSelectedRowCount() == 1 && !CarrinhoIsEmpty()){
+            DefaultTableModel model = (DefaultTableModel) TabelaCarrinho.getModel();
+            
+            this.total -= Double.parseDouble(TabelaCarrinho.getValueAt(TabelaCarrinho.getSelectedRow(), 4).toString());
+            
+            TXTTotal.setText(String.valueOf(this.total));
+            
+            model.removeRow(TabelaCarrinho.getSelectedRow());
+        }
+    }//GEN-LAST:event_BUTTONDeletarRowActionPerformed
+
+    private void TabelaCarrinhoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelaCarrinhoMouseClicked
+        
+    }//GEN-LAST:event_TabelaCarrinhoMouseClicked
+
+    private void BUTTONCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONCancelarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_BUTTONCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -583,12 +682,17 @@ public class ViewportVendas extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ViewportVendas().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ViewportSales().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BUTTONAdicionarItem;
+    private javax.swing.JButton BUTTONCancelar;
+    private javax.swing.JButton BUTTONDeletarRow;
+    private javax.swing.JButton BUTTONPagamento;
     private javax.swing.JButton BUTTONPesquisar;
     private javax.swing.JButton BUTTONPreencherCliente;
+    private javax.swing.JButton BUTTONStock;
     private javax.swing.JLabel LABELData;
     private javax.swing.JTextField TXTCPFCliente;
     private javax.swing.JTextField TXTCor;
@@ -599,10 +703,6 @@ public class ViewportVendas extends javax.swing.JFrame {
     private javax.swing.JTextField TXTQuantidade;
     private javax.swing.JTextField TXTTotal;
     private javax.swing.JTable TabelaCarrinho;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

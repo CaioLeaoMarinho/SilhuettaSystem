@@ -164,7 +164,7 @@ public class ViewportStock extends javax.swing.JFrame {
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setForeground(new java.awt.Color(255, 255, 255));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new java.awt.Dimension(1920, 1080));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -886,7 +886,7 @@ public class ViewportStock extends javax.swing.JFrame {
     private javax.swing.JPanel ConsultJPanel;
     private javax.swing.JButton EDITARButton;
     private javax.swing.JButton EXCLUIRButton;
-    private javax.swing.JTabbedPane MainTabbedPane;
+    public javax.swing.JTabbedPane MainTabbedPane;
     private javax.swing.JButton NOVOButton;
     private javax.swing.JTextField TXTCodigoProduto;
     private javax.swing.JTextField TXTCor;

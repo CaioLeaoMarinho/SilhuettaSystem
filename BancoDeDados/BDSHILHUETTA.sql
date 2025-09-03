@@ -1,5 +1,3 @@
-
-
 CREATE DATABASE BDSILHUETTA;
 
 USE BDSILHUETTA;
@@ -61,13 +59,19 @@ CREATE TABLE tb_produtos (
 /***** TABELA VENDAS *****/
 CREATE TABLE tb_vendas (
   id int auto_increment primary key,
-  cliente_id int,
+  cliente_nome varchar(100),
+  cliente_cpf varchar(20),
   data_venda datetime,
   total_venda decimal (10,2),
-  metodo_pag varchar(20),
-  observacoes text,
-
-  FOREIGN KEY (cliente_id) REFERENCES tb_clientes(id)
+  dinheiro decimal (10,2),
+  debito decimal (10,2),
+  pix decimal (10,2),
+  link decimal (10,2),
+  credito decimal (10,2),
+  parcelas varchar (2),
+  cliente_endereco varchar(100),
+  cliente_referencia varchar(100),
+  observacoes text
 );
 /*****************/
 
@@ -83,6 +87,3 @@ CREATE TABLE tb_itensvendas (
   FOREIGN KEY (produto_id) REFERENCES tb_produtos(id)
 );
 /*****************/
-
-
-select * from tb_clientes where nome like 'a%';
