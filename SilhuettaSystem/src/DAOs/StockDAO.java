@@ -209,4 +209,42 @@ public class StockDAO {
             return null;
         }
     }
+    
+    public void StockWriteOff(int productID, int newQuantity){
+        try{
+            String sql = "update tb_produtos set qtd_estoque = ? where id = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, productID);
+            
+            stmt.execute();
+            stmt.close();
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "FALHA ao dar BAIXA no Estoque: " + e);
+        }
+    }
+    
+    public int getProductStock(int productID){
+        try{
+            int inStock = 0;
+            
+            String sql = "SELECT qtd_estoque from tb_produtos where id = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+            stmt.setInt(1, productID);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()){              
+                inStock = (rs.getInt("qtd_estoque"));
+            }
+            
+            return inStock;
+        }
+        catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

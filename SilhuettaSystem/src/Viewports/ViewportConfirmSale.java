@@ -6,6 +6,7 @@ package Viewports;
 
 import DAOs.ItemSalesDAO;
 import DAOs.SalesDAO;
+import DAOs.StockDAO;
 import Models.ItensSalesModel;
 import Models.ProductsModel;
 import Models.SalesModel;
@@ -292,9 +293,10 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
         
         sale.setID(saleDAO.getLastIDSale());
         
-        for (int i = 0; i < cart.getRowCount(); i++){
+        for (int i = 0; i < cart.getRowCount(); i++){  
             ItensSalesModel item = new ItensSalesModel();
             ProductsModel product = new ProductsModel();
+            StockDAO stockDAO = new StockDAO();
             
             product.setId(Integer.parseInt(cart.getValueAt(i, 0).toString()));
             
@@ -302,6 +304,8 @@ public class ViewportConfirmSale extends javax.swing.JFrame {
             item.setProduct(product);
             item.setQuantity(Integer.parseInt(cart.getValueAt(i, 2).toString()));
             item.setSubtotal(Double.parseDouble(cart.getValueAt(i, 4).toString()));
+            
+            stockDAO.StockWriteOff( product.getId(), stockDAO.getProductStock( product.getId() ) - item.getQuantity() );
             
             ItemSalesDAO itemSalesDAO = new ItemSalesDAO();
             itemSalesDAO.registerItemSale(item);

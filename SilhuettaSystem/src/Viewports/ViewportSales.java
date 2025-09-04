@@ -543,30 +543,66 @@ public class ViewportSales extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BUTTONAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONAdicionarItemActionPerformed
-        if (Integer.parseInt(TXTQuantidade.getText()) > 0 && TXTQuantidade.getText() != null) {
+        if (!TXTQuantidade.getText().isBlank() && Integer.parseInt(TXTQuantidade.getText()) > 0) {
+            StockDAO stockDAO = new StockDAO();
             this.quantity = Integer.parseInt(TXTQuantidade.getText());
             this.price = Double.parseDouble(TXTPreco.getText());
 
-            this.subtotal = quantity * price;
-            this.total += this.subtotal;
-
-            TXTTotal.setText(String.valueOf(this.total));
+            this.subtotal = this.quantity * this.price;
 
             this.cart = (DefaultTableModel) TabelaCarrinho.getModel();
 
-            this.cart.addRow(new Object[]{
-                TXTID.getText(),
-                TXTProduto.getText(),
-                TXTQuantidade.getText(),
-                TXTPreco.getText(),
-                subtotal
-            });
+            int productCartPos = getProductPosInCart(Integer.parseInt(TXTID.getText()));
+
+            if (productCartPos >= 0){
+                int inCartQuantity = Integer.parseInt(cart.getValueAt(productCartPos, 2).toString());
+                double inCartSubtotal = Double.parseDouble(cart.getValueAt(productCartPos, 4).toString());
+                
+                this.quantity += inCartQuantity;
+                this.subtotal = this.quantity * this.price;
+                
+                this.total -= inCartSubtotal;
+            }
+            
+            if ( stockDAO.getProductStock(Integer.parseInt(TXTID.getText()) ) >= this.quantity){
+                if (productCartPos >= 0){
+                    cart.setValueAt(this.quantity, productCartPos, 2);
+                    cart.setValueAt(this.subtotal, productCartPos, 4);
+                }
+                else{
+                    this.cart.addRow(new Object[]{
+                    TXTID.getText(),
+                    TXTProduto.getText(),
+                    this.quantity,
+                    this.price,
+                    this.subtotal 
+                    });
+                }
+                
+                this.total += this.subtotal;
+                TXTTotal.setText(String.valueOf(this.total));
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "ERRO: Não há quantidade suficiente deste produto em Estoque.");
+            }
         }
         else{
             JOptionPane.showMessageDialog(null, "Insira uma quantidade do produto");
         }
     }//GEN-LAST:event_BUTTONAdicionarItemActionPerformed
 
+    private int getProductPosInCart(int productID){
+        for (int i = 0; i < this.cart.getRowCount(); i++) {
+            int rowProductID = Integer.parseInt(cart.getValueAt(i, 0).toString());
+            
+            if (rowProductID == productID){
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
     private void TXTIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTIDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TXTIDActionPerformed
