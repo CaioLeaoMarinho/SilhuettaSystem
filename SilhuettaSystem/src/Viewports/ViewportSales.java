@@ -588,7 +588,7 @@ public class ViewportSales extends javax.swing.JFrame {
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "Insira uma quantidade do produto");
+            JOptionPane.showMessageDialog(null, "ERRO: Insira uma quantidade do produto");
         }
     }//GEN-LAST:event_BUTTONAdicionarItemActionPerformed
 
