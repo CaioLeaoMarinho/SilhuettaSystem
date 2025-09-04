@@ -36,7 +36,8 @@ CREATE TABLE tb_funcionarios (
   senha varchar(20),
   celular varchar(30),
   cep varchar(100),
-  endereco varchar (255)
+  endereco varchar (255),
+  nivel_acesso varchar (20)
 );
 /*****************/
 
