@@ -544,7 +544,6 @@ public class ViewportSales extends javax.swing.JFrame {
 
     private void BUTTONAdicionarItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONAdicionarItemActionPerformed
         if (!TXTQuantidade.getText().isBlank() && Integer.parseInt(TXTQuantidade.getText()) > 0) {
-            StockDAO stockDAO = new StockDAO();
             this.quantity = Integer.parseInt(TXTQuantidade.getText());
             this.price = Double.parseDouble(TXTPreco.getText());
 
@@ -563,6 +562,8 @@ public class ViewportSales extends javax.swing.JFrame {
                 
                 this.total -= inCartSubtotal;
             }
+            
+            StockDAO stockDAO = new StockDAO();
             
             if ( stockDAO.getProductStock(Integer.parseInt(TXTID.getText()) ) >= this.quantity){
                 if (productCartPos >= 0){
