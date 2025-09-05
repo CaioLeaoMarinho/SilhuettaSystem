@@ -18,6 +18,7 @@ public class EmployeesModel {
     private String cellphone;
     private String CEP;
     private String address;
+    private String acessLevel;
 
     public int getId() {
         return id;
@@ -91,5 +92,11 @@ public class EmployeesModel {
         this.address = address;
     }
 
-    
+    public String getAcessLevel() {
+        return acessLevel;
+    }
+
+    public void setAcessLevel(String acessLevel) {
+        this.acessLevel = acessLevel;
+    }
 }

@@ -7,6 +7,7 @@ package Viewports;
 import DAOs.ClientsDAO;
 import DAOs.StockDAO;
 import Models.ClientsModel;
+import Models.EmployeesModel;
 import Models.NumberFilterDocument;
 import Models.ProductsModel;
 import java.text.SimpleDateFormat;
@@ -25,14 +26,17 @@ public class ViewportSales extends javax.swing.JFrame {
     int quantity;
 
     DefaultTableModel cart;
+    private EmployeesModel employeeLogged;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportSales.class.getName());
 
     /**
      * Creates new form ViewportVendas
      */
-    public ViewportSales() {
+    public ViewportSales(EmployeesModel employeeLogged) {
         initComponents();
+        
+        this.employeeLogged = employeeLogged;
         
         ((AbstractDocument) TXTCPFCliente.getDocument()).setDocumentFilter(new NumberFilterDocument());
         ((AbstractDocument) TXTID.getDocument()).setDocumentFilter(new NumberFilterDocument());
@@ -656,7 +660,7 @@ public class ViewportSales extends javax.swing.JFrame {
     }//GEN-LAST:event_BUTTONPesquisarActionPerformed
 
     private void BUTTONStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONStockActionPerformed
-        ViewportStock viewS = new ViewportStock();
+        ViewportStock viewS = new ViewportStock(this.employeeLogged);
         viewS.MainTabbedPane.setSelectedIndex(1);
 
         viewS.setVisible(true);
@@ -669,7 +673,6 @@ public class ViewportSales extends javax.swing.JFrame {
             String dateFormated = dateEUA.format(date);
             
             ViewportPayments viewP = new ViewportPayments(Double.parseDouble(TXTTotal.getText()), TXTNomeCliente.getText(), TXTCPFCliente.getText(), dateFormated, this.cart);
-            
             viewP.setVisible(true);
         }
         else{
@@ -719,7 +722,6 @@ public class ViewportSales extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ViewportSales().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

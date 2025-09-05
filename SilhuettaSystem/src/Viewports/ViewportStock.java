@@ -5,8 +5,8 @@
 package Viewports;
 
 import DAOs.StockDAO;
+import Models.EmployeesModel;
 import Models.ProductsModel;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -18,12 +18,14 @@ import javax.swing.table.DefaultTableModel;
 public class ViewportStock extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportStock.class.getName());
-
+    private EmployeesModel employeeLogged;
     /**
      * Creates new form ViewportMainMenu
      */
-    public ViewportStock() {
+    public ViewportStock(EmployeesModel employeeLogged) {
         initComponents();
+        
+        this.employeeLogged = employeeLogged;
     }
 
     private void listTable() {
@@ -699,6 +701,7 @@ public class ViewportStock extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TXTTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTTipoActionPerformed
@@ -714,78 +717,93 @@ public class ViewportStock extends javax.swing.JFrame {
     }//GEN-LAST:event_TXTProdutoActionPerformed
 
     private void EDITARButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EDITARButtonActionPerformed
-        if (HaveAllParameters()) {
-            try {
-                ProductsModel currentProduct = new ProductsModel();
+        if (this.employeeLogged.getAcessLevel().equals("Administrador")){
+            if (HaveAllParameters()) {
+                try {
+                    ProductsModel currentProduct = new ProductsModel();
 
-                currentProduct.setId(Integer.parseInt(TXTID.getText()));
-                currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
-                currentProduct.setReference(TXTReferencia.getText());
-                currentProduct.setProduct(TXTProduto.getText());
-                currentProduct.setColor(TXTCor.getText());
-                currentProduct.setType(TXTTipo.getText());
-                currentProduct.setSize(TXTTamanho.getText());
-                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
-                currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
-                currentProduct.setSupplier(TXTFornecedor.getText());
+                    currentProduct.setId(Integer.parseInt(TXTID.getText()));
+                    currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
+                    currentProduct.setReference(TXTReferencia.getText());
+                    currentProduct.setProduct(TXTProduto.getText());
+                    currentProduct.setColor(TXTCor.getText());
+                    currentProduct.setType(TXTTipo.getText());
+                    currentProduct.setSize(TXTTamanho.getText());
+                    currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
+                    currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
+                    currentProduct.setSupplier(TXTFornecedor.getText());
 
-                StockDAO dao = new StockDAO();
+                    StockDAO dao = new StockDAO();
 
-                dao.updateProduct(currentProduct);
+                    dao.updateProduct(currentProduct);
 
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "FALHA ao EDITAR Produto: " + e);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "FALHA ao EDITAR Produto: " + e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro: Produto e/ou Preco invalidos.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Erro: Produto e/ou Preco invalidos.");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Você não possui Acesso...");
         }
     }//GEN-LAST:event_EDITARButtonActionPerformed
 
     private void EXCLUIRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EXCLUIRButtonActionPerformed
-        if (TXTID.getText() != null) {
-            try {
-                ProductsModel currentProduct = new ProductsModel();
+        if (this.employeeLogged.getAcessLevel().equals("Administrador")){    
+            if (TXTID.getText() != null) {
+                try {
+                    ProductsModel currentProduct = new ProductsModel();
 
-                currentProduct.setId(Integer.parseInt(TXTID.getText()));
+                    currentProduct.setId(Integer.parseInt(TXTID.getText()));
 
-                StockDAO dao = new StockDAO();
+                    StockDAO dao = new StockDAO();
 
-                dao.deleteProduct(currentProduct);
+                    dao.deleteProduct(currentProduct);
 
-                new ViewportsUtils().clearPanel(ClientDataJPanel);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "FALHA ao EXCLUIR Produto: " + e);
+                    new ViewportsUtils().clearPanel(ClientDataJPanel);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "FALHA ao EXCLUIR Produto: " + e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro: ID invalido.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Erro: ID invalido.");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Você não possui Acesso...");
         }
     }//GEN-LAST:event_EXCLUIRButtonActionPerformed
 
     private void NOVOButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NOVOButtonActionPerformed
-        if (HaveAllParameters()) {
-            try {
-                ProductsModel currentProduct = new ProductsModel();
-                
-                currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
-                currentProduct.setReference(TXTReferencia.getText());
-                currentProduct.setProduct(TXTProduto.getText());
-                currentProduct.setColor(TXTCor.getText());
-                currentProduct.setType(TXTTipo.getText());
-                currentProduct.setSize(TXTTamanho.getText());
-                currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
-                currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
-                currentProduct.setSupplier(TXTFornecedor.getText());
+        if (this.employeeLogged.getAcessLevel().equals("Administrador")){    
+            if (HaveAllParameters()) {
+                try {
+                    ProductsModel currentProduct = new ProductsModel();
 
-                StockDAO dao = new StockDAO();
+                    currentProduct.setCode(getProductCode(TXTReferencia.getText(),TXTCor.getText(),TXTTipo.getText(),TXTTamanho.getText(),TXTFornecedor.getText()));
+                    currentProduct.setReference(TXTReferencia.getText());
+                    currentProduct.setProduct(TXTProduto.getText());
+                    currentProduct.setColor(TXTCor.getText());
+                    currentProduct.setType(TXTTipo.getText());
+                    currentProduct.setSize(TXTTamanho.getText());
+                    currentProduct.setPrice(Double.parseDouble(TXTPreco.getText().replace(",", ".")));
+                    currentProduct.setQuantity(Integer.parseInt(TXTQuantidade.getText()));
+                    currentProduct.setSupplier(TXTFornecedor.getText());
 
-                dao.registerProduct(currentProduct);
+                    StockDAO dao = new StockDAO();
 
-                new ViewportsUtils().clearPanel(ClientDataJPanel);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "FALHA ao CADASTRAR Produto: " + e);
+                    dao.registerProduct(currentProduct);
+
+                    new ViewportsUtils().clearPanel(ClientDataJPanel);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "FALHA ao CADASTRAR Produto: " + e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro: Algum dado faltando.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Erro: Algum dado faltando.");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Você não possui Acesso...");
         }
     }//GEN-LAST:event_NOVOButtonActionPerformed
 
@@ -878,7 +896,7 @@ public class ViewportStock extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ViewportStock().setVisible(true));
+        //java.awt.EventQueue.invokeLater(() -> new ViewportStock().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

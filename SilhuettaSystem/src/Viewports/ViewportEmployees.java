@@ -44,7 +44,8 @@ public class ViewportEmployees extends javax.swing.JFrame {
                 c.getEmail(),
                 c.getPassword(),
                 c.getCEP(),
-                c.getAddress()
+                c.getAddress(),
+                c.getAcessLevel()
             });
         }
     }
@@ -94,7 +95,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         TXTRg = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        CBNivelAcesso = new javax.swing.JComboBox<>();
         ConsultJPanel = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         TXTFiltrarCPF = new javax.swing.JTextField();
@@ -107,7 +108,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setForeground(new java.awt.Color(255, 255, 255));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new java.awt.Dimension(1920, 1080));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -271,11 +272,11 @@ public class ViewportEmployees extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Nivel de Acesso:");
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Administrador" }));
-        jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        CBNivelAcesso.setBackground(new java.awt.Color(255, 255, 255));
+        CBNivelAcesso.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CBNivelAcesso.setForeground(new java.awt.Color(0, 0, 0));
+        CBNivelAcesso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Administrador" }));
+        CBNivelAcesso.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout ClientDataJPanelLayout = new javax.swing.GroupLayout(ClientDataJPanel);
         ClientDataJPanel.setLayout(ClientDataJPanelLayout);
@@ -314,7 +315,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ClientDataJPanelLayout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, 0, 243, Short.MAX_VALUE)
+                        .addComponent(CBNivelAcesso, 0, 243, Short.MAX_VALUE)
                         .addGap(229, 229, 229)
                         .addComponent(jLabel9))
                     .addGroup(ClientDataJPanelLayout.createSequentialGroup()
@@ -374,10 +375,11 @@ public class ViewportEmployees extends javax.swing.JFrame {
                     .addComponent(TXTEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(PesquisarButton1))
                 .addGap(18, 18, 18)
-                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
+                .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ClientDataJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(CBNivelAcesso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
 
@@ -407,13 +409,13 @@ public class ViewportEmployees extends javax.swing.JFrame {
         TableListClients.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TableListClients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nome", "RG", "CPF", "Celular", "E-mail", "Senha", "CEP", "Endereço"
+                "Código", "Nome", "RG", "CPF", "Celular", "E-mail", "Senha", "CEP", "Endereço", "Acesso"
             }
         ));
         TableListClients.setGridColor(new java.awt.Color(255, 255, 255));
@@ -534,6 +536,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void TXTEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTEmailActionPerformed
@@ -562,6 +565,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
                 currentClient.setCellphone(TXTCelular.getText());
                 currentClient.setEmail(TXTEmail.getText());
                 currentClient.setPassword(TXTSenha.getText());
+                currentClient.setAcessLevel(CBNivelAcesso.getSelectedItem().toString() );
 
                 EmployeesDAO dao = new EmployeesDAO();
 
@@ -608,6 +612,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
                 currentEmployee.setCellphone(TXTCelular.getText());
                 currentEmployee.setEmail(TXTEmail.getText());
                 currentEmployee.setPassword(TXTSenha.getText());
+                currentEmployee.setAcessLevel(CBNivelAcesso.getSelectedItem().toString() );
 
                 EmployeesDAO dao = new EmployeesDAO();
 
@@ -636,6 +641,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
         TXTSenha.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 6).toString());
         TXTCEP.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 7).toString());
         TXTEndereco.setText(TableListClients.getValueAt(TableListClients.getSelectedRow(), 8).toString());
+        CBNivelAcesso.setSelectedItem(TableListClients.getValueAt(TableListClients.getSelectedRow(), 9).toString());
 
         MainTabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_TableListClientsMouseClicked
@@ -659,7 +665,8 @@ public class ViewportEmployees extends javax.swing.JFrame {
                 c.getEmail(),
                 c.getPassword(),
                 c.getCEP(),
-                c.getAddress()
+                c.getAddress(),
+                c.getAcessLevel()
             });
         }
     }//GEN-LAST:event_TXTFiltrarCPFKeyPressed
@@ -671,7 +678,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
 
         client = dao.consultEmployeeByName(clientName);
 
-        if (client.getName() != null) {
+        if (!client.getName().isBlank()) {
             TXTCodigo.setText(String.valueOf(client.getId()));
             TXTNome.setText(client.getName());
             TXTRg.setText(client.getRg());
@@ -681,6 +688,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
             TXTSenha.setText(client.getPassword());
             TXTCEP.setText(client.getCEP());
             TXTEndereco.setText(client.getAddress());
+            CBNivelAcesso.setSelectedItem(client.getAcessLevel());
         } else {
             JOptionPane.showMessageDialog(null, "FALHA ao ENCONTRAR Cliente de nome: " + clientName);
         }
@@ -722,6 +730,7 @@ public class ViewportEmployees extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> CBNivelAcesso;
     private javax.swing.JPanel ClientDataJPanel;
     private javax.swing.JPanel ConsultJPanel;
     private javax.swing.JButton EDITARButton;
@@ -741,7 +750,6 @@ public class ViewportEmployees extends javax.swing.JFrame {
     private javax.swing.JTextField TXTRg;
     private javax.swing.JTextField TXTSenha;
     private javax.swing.JTable TableListClients;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

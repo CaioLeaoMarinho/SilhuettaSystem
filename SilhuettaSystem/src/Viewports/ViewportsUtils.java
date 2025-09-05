@@ -15,28 +15,41 @@ import javax.swing.JTextField;
  * @author caiol
  */
 public class ViewportsUtils {
-    public void clearPanel(JPanel containerPanel){
+
+    public void clearPanel(JPanel containerPanel) {
         Component components[] = containerPanel.getComponents();
-        
-        for(Component component : components){
-            if (component instanceof JTextField){
-                ((JTextField)component).setText(null);
+
+        for (Component component : components) {
+            if (component instanceof JTextField) {
+                ((JTextField) component).setText(null);
             }
         }
     }
-public AddressModel fillAddressByCep(String CEP){
+
+    public AddressModel fillAddressByCep(String CEP) {
         WebServiceCep webServiceCep = WebServiceCep.searchCep(CEP);
-        
+
         System.out.println("Endereço encontrado: " + webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        
+
         AddressModel client = new AddressModel();
 
         if (webServiceCep.wasSuccessful()) {
             client.setAddress(webServiceCep.getLogradouroFull() + ", " + webServiceCep.getBairro() + " - " + webServiceCep.getCidade());
-        } 
-        else {
-            client.setAddress("");            
+        } else {
+            client.setAddress("");
         }
         return client;
+    }
+
+    public String getTwoFirstWords(String text) {
+        String[] parts = text.trim().split("\\s+"); 
+        String twoFirstWords;
+        
+        if (parts.length >= 2) {
+            twoFirstWords = parts[0] + " " + parts[1];
+        } else {
+            twoFirstWords = parts[0];
+        }
+        return twoFirstWords;
     }
 }

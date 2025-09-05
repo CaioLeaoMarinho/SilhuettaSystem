@@ -28,8 +28,8 @@ public class EmployeesDAO {
     public void registerEmployee(EmployeesModel employee){
         try
         {
-            String sql = "insert into tb_funcionarios(nome, rg, cpf, email, senha, celular, cep, endereco)"
-                    + " values(?,?,?,?,?,?,?,?)";
+            String sql = "insert into tb_funcionarios(nome, rg, cpf, email, senha, celular, cep, endereco, nivel_acesso)"
+                    + " values(?,?,?,?,?,?,?,?,?)";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, employee.getName());
@@ -40,6 +40,7 @@ public class EmployeesDAO {
             stmt.setString(6, employee.getCellphone());
             stmt.setString(7, employee.getCEP());
             stmt.setString(8, employee.getAddress());
+            stmt.setString(9, employee.getAcessLevel());
             
             stmt.execute();
             stmt.close();
@@ -56,7 +57,7 @@ public class EmployeesDAO {
     public void updateEmployee(EmployeesModel employee){
         try
         {
-            String sql = "update tb_funcionarios set nome = ?, rg = ?, cpf = ?, email = ?, senha = ?, celular = ?, cep = ?, endereco = ? where id = ?";
+            String sql = "update tb_funcionarios set nome = ?, rg = ?, cpf = ?, email = ?, senha = ?, celular = ?, cep = ?, endereco = ?, nivel_acesso = ? where id = ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, employee.getName());
@@ -67,7 +68,8 @@ public class EmployeesDAO {
             stmt.setString(6, employee.getCellphone());
             stmt.setString(7, employee.getCEP());
             stmt.setString(8, employee.getAddress());
-            stmt.setInt(9, employee.getId());
+            stmt.setString(9, employee.getAcessLevel());
+            stmt.setInt(10, employee.getId());
             
             stmt.execute();
             stmt.close();
@@ -84,7 +86,7 @@ public class EmployeesDAO {
     public void deleteEmployee(EmployeesModel employees){
         try
         {
-            String sql = "delete from tb_clientes where id = ?";
+            String sql = "delete from tb_funcionarios where id = ?";
             
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, employees.getId());
@@ -123,6 +125,7 @@ public class EmployeesDAO {
                 e.setCellphone(rs.getString("celular"));
                 e.setAddress(rs.getString("endereco"));
                 e.setCEP(rs.getString("cep"));
+                e.setAcessLevel(rs.getString("nivel_acesso"));
                 
                 list.add(e);
             }
@@ -159,6 +162,7 @@ public class EmployeesDAO {
                 e.setCellphone(rs.getString("celular"));
                 e.setAddress(rs.getString("endereco"));
                 e.setCEP(rs.getString("cep"));
+                e.setAcessLevel(rs.getString("nivel_acesso"));
                 
                 list.add(e);
             }
@@ -192,6 +196,7 @@ public class EmployeesDAO {
                 e.setCellphone(rs.getString("celular"));
                 e.setAddress(rs.getString("endereco"));
                 e.setCEP(rs.getString("cep"));
+                e.setAcessLevel(rs.getString("nivel_acesso"));
             }
             return e;
         }
@@ -199,5 +204,42 @@ public class EmployeesDAO {
             JOptionPane.showMessageDialog(null, "FALHA ao ENCONTRAR Funcionario: " + e);
             return null;
         }
+    }
+    
+    public EmployeesModel TryLogin(String email, String password){
+        EmployeesModel employeeLogged = null;
+        
+        try{
+            String sql = "select * from tb_funcionarios where email = ? and senha = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if( rs.next() ){
+                employeeLogged = new EmployeesModel();
+                
+                employeeLogged.setId(rs.getInt("id"));
+                employeeLogged.setName(rs.getString("nome"));
+                employeeLogged.setRg(rs.getString("rg"));
+                employeeLogged.setCPF(rs.getString("cpf"));
+                employeeLogged.setEmail(rs.getString("email"));
+                employeeLogged.setPassword(rs.getString("senha"));
+                employeeLogged.setCellphone(rs.getString("celular"));
+                employeeLogged.setCEP(rs.getString("cep"));
+                employeeLogged.setAddress(rs.getString("endereco"));
+                employeeLogged.setAcessLevel(rs.getString("nivel_acesso"));
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "USUÁRIO NÃO ENCONTRADO");
+            }
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao tentar login: " + e);
+        }
+        
+        return employeeLogged;
     }
 }
