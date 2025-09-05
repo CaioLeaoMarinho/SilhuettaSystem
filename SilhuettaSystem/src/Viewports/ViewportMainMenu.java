@@ -117,7 +117,7 @@ public class ViewportMainMenu extends javax.swing.JFrame {
         });
 
         LABELNome.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        LABELNome.setForeground(new java.awt.Color(200, 185, 151));
+        LABELNome.setForeground(new java.awt.Color(255, 255, 255));
         LABELNome.setText("NOME");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
