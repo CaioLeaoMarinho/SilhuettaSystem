@@ -153,8 +153,8 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Dados Pessoais">
-                    <Property name="tabTitle" type="java.lang.String" value="Dados Pessoais"/>
+                  <JTabbedPaneConstraints tabName="Dados do Item">
+                    <Property name="tabTitle" type="java.lang.String" value="Dados do Item"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>

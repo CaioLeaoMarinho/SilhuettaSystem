@@ -42,6 +42,7 @@ public class ViewportMainMenu extends javax.swing.JFrame {
         BUTTONClientes = new javax.swing.JButton();
         BUTTONSair = new javax.swing.JButton();
         LABELNome = new javax.swing.JLabel();
+        BUTTONDespesas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -120,6 +121,18 @@ public class ViewportMainMenu extends javax.swing.JFrame {
         LABELNome.setForeground(new java.awt.Color(255, 255, 255));
         LABELNome.setText("NOME");
 
+        BUTTONDespesas.setBackground(new java.awt.Color(255, 255, 255));
+        BUTTONDespesas.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        BUTTONDespesas.setForeground(new java.awt.Color(255, 255, 255));
+        BUTTONDespesas.setText("Despesas");
+        BUTTONDespesas.setBorder(null);
+        BUTTONDespesas.setContentAreaFilled(false);
+        BUTTONDespesas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BUTTONDespesasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -134,7 +147,8 @@ public class ViewportMainMenu extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(BUTTONSair, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LABELNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(LABELNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BUTTONDespesas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -148,7 +162,9 @@ public class ViewportMainMenu extends javax.swing.JFrame {
                 .addComponent(BUTTONEstoque, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BUTTONClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BUTTONDespesas, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(BUTTONSair, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                     .addComponent(LABELNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -226,7 +242,25 @@ public class ViewportMainMenu extends javax.swing.JFrame {
         ViewportsUtils utils = new ViewportsUtils();
 
         LABELNome.setText(utils.getTwoFirstWords(this.employeeLogged.getName()));
+        
+        if (!this.employeeLogged.getAcessLevel().equals("Administrador")){
+            BUTTONDespesas.setEnabled(false);
+            BUTTONDespesas.setText("");
+            
+            BUTTONFuncionarios.setEnabled(false);
+            BUTTONFuncionarios.setText("");
+        }
     }//GEN-LAST:event_formWindowActivated
+
+    private void BUTTONDespesasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONDespesasActionPerformed
+        if (this.employeeLogged.getAcessLevel().equals("Administrador")) {
+            ViewportExpenses viewportExpenses = new ViewportExpenses();
+            viewportExpenses.setVisible(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Você não possui Acesso...");
+        }
+    }//GEN-LAST:event_BUTTONDespesasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,6 +286,7 @@ public class ViewportMainMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BUTTONClientes;
+    private javax.swing.JButton BUTTONDespesas;
     private javax.swing.JButton BUTTONEstoque;
     private javax.swing.JButton BUTTONFuncionarios;
     private javax.swing.JButton BUTTONSair;

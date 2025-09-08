@@ -416,7 +416,7 @@ public class ViewportStock extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        MainTabbedPane.addTab("Dados Pessoais", ClientDataJPanel);
+        MainTabbedPane.addTab("Dados do Item", ClientDataJPanel);
 
         ConsultJPanel.setBackground(new java.awt.Color(255, 255, 255));
         ConsultJPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));

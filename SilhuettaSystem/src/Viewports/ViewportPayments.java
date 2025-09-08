@@ -21,9 +21,9 @@ public class ViewportPayments extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewportPayments.class.getName());
 
-    private double totalPrice;
-    private double totalPaid = 0, totalInCash = 0; 
-    private double minimumInstallmentsValue = 30.00;
+    private double totalPrice = 0.0, initialTotalPrice = 0.0;
+    private double totalPaid = 0.0, totalInCash = 0.0; 
+    private final double minimumInstallmentsValue = 30.00;
     
     // SALE DATA:
     public String client_name;
@@ -48,11 +48,14 @@ public class ViewportPayments extends javax.swing.JFrame {
         ) 
     {
         initComponents();
-        this.totalPrice = totalPrice;
         this.client_name = client_name;
         this.client_cpf = client_cpf;
         this.date = date;
         this.cart = cart;
+        
+        for (int i = 0; i < this.cart.getRowCount(); i++){
+            this.totalPrice += Double.parseDouble( this.cart.getValueAt(i, 4).toString() );
+        }
         
         ((AbstractDocument) TXTDinheiro.getDocument()).setDocumentFilter(new CashFilterDocument());
         ((AbstractDocument) TXTDebito.getDocument()).setDocumentFilter(new CashFilterDocument());
@@ -132,36 +135,22 @@ public class ViewportPayments extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         TXTDinheiro = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        LABELTotalDinheiro = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        BTNConfirmarDebito = new javax.swing.JButton();
-        BTNCancelarDebito = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        LABELTotalDebito = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        LABELAPagar = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         TXTDebito = new javax.swing.JTextField();
-        jPanel5 = new javax.swing.JPanel();
-        BTNConfirmarPIX = new javax.swing.JButton();
-        BTNCancelarPIX = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        LABELTotalPIX = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
         TXTPIX = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
-        BTNConfirmarLink = new javax.swing.JButton();
-        BTNCancelarBoleto = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
-        LABELTotalLink = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         TXTLink = new javax.swing.JTextField();
-        jPanel7 = new javax.swing.JPanel();
-        BTNConfirmarCredito = new javax.swing.JButton();
-        BTNCancelarCredito = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        LABELTotalCredito = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         TXTCredito = new javax.swing.JTextField();
         CBParcelas = new javax.swing.JComboBox<>();
+        CHECKDesconto = new javax.swing.JCheckBox();
+        TBDinheiro = new javax.swing.JToggleButton();
+        TBDebito = new javax.swing.JToggleButton();
+        TBPix = new javax.swing.JToggleButton();
+        TBLink = new javax.swing.JToggleButton();
+        TBCredito = new javax.swing.JToggleButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
@@ -178,7 +167,6 @@ public class ViewportPayments extends javax.swing.JFrame {
         TXTReferencia = new javax.swing.JTextField();
         BTNConfirmarFinalizar = new javax.swing.JButton();
         BTNCancelarFinalizar = new javax.swing.JButton();
-        CHECKDesconto = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -260,8 +248,8 @@ public class ViewportPayments extends javax.swing.JFrame {
         TXTDinheiro.setText("0.00");
         TXTDinheiro.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         TXTDinheiro.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                TXTDinheiroKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TXTDinheiroKeyReleased(evt);
             }
         });
 
@@ -270,334 +258,59 @@ public class ViewportPayments extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("TOTAL A PAGAR:");
 
-        LABELTotalDinheiro.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        LABELTotalDinheiro.setForeground(new java.awt.Color(204, 0, 0));
-        LABELTotalDinheiro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LABELTotalDinheiro.setText("0.00");
+        LABELAPagar.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        LABELAPagar.setForeground(new java.awt.Color(204, 0, 0));
+        LABELAPagar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LABELAPagar.setText("0.00");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TXTDinheiro))
-                            .addComponent(BTNConfirmarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(LABELTotalDinheiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LABELTotalDinheiro)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTNConfirmarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BTNCancelarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {BTNConfirmarDinheiro, jLabel1});
-
-        TABBEDPANEMain.addTab("Dinheiro", jPanel3);
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-
-        BTNConfirmarDebito.setBackground(new java.awt.Color(149, 117, 47));
-        BTNConfirmarDebito.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNConfirmarDebito.setForeground(new java.awt.Color(0, 0, 153));
-        BTNConfirmarDebito.setText("CONFIRMAR");
-        BTNConfirmarDebito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNConfirmarDebitoActionPerformed(evt);
-            }
-        });
-
-        BTNCancelarDebito.setBackground(new java.awt.Color(149, 117, 47));
-        BTNCancelarDebito.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNCancelarDebito.setForeground(new java.awt.Color(153, 0, 0));
-        BTNCancelarDebito.setText("CANCELAR");
-        BTNCancelarDebito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNCancelarDebitoActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("TOTAL A PAGAR:");
-
-        LABELTotalDebito.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        LABELTotalDebito.setForeground(new java.awt.Color(204, 0, 0));
-        LABELTotalDebito.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LABELTotalDebito.setText("0.00");
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel12.setText("Débito:");
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setText("Débito:");
 
         TXTDebito.setBackground(new java.awt.Color(255, 255, 255));
         TXTDebito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TXTDebito.setForeground(new java.awt.Color(0, 0, 0));
         TXTDebito.setText("0.00");
         TXTDebito.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LABELTotalDebito, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TXTDebito))
-                            .addComponent(BTNConfirmarDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LABELTotalDebito)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTNConfirmarDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BTNCancelarDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        TABBEDPANEMain.addTab("Débito", jPanel4);
-
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-
-        BTNConfirmarPIX.setBackground(new java.awt.Color(149, 117, 47));
-        BTNConfirmarPIX.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNConfirmarPIX.setForeground(new java.awt.Color(0, 0, 153));
-        BTNConfirmarPIX.setText("CONFIRMAR");
-        BTNConfirmarPIX.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNConfirmarPIXActionPerformed(evt);
+        TXTDebito.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TXTDebitoKeyReleased(evt);
             }
         });
 
-        BTNCancelarPIX.setBackground(new java.awt.Color(149, 117, 47));
-        BTNCancelarPIX.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNCancelarPIX.setForeground(new java.awt.Color(153, 0, 0));
-        BTNCancelarPIX.setText("CANCELAR");
-        BTNCancelarPIX.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNCancelarPIXActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("TOTAL A PAGAR:");
-
-        LABELTotalPIX.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        LABELTotalPIX.setForeground(new java.awt.Color(204, 0, 0));
-        LABELTotalPIX.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LABELTotalPIX.setText("0.00");
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel13.setText("PIX:");
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel17.setText("PIX:");
 
         TXTPIX.setBackground(new java.awt.Color(255, 255, 255));
         TXTPIX.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TXTPIX.setForeground(new java.awt.Color(0, 0, 0));
         TXTPIX.setText("0.00");
         TXTPIX.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LABELTotalPIX, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TXTPIX))
-                            .addComponent(BTNConfirmarPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LABELTotalPIX)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTNConfirmarPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BTNCancelarPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        TABBEDPANEMain.addTab("PIX", jPanel5);
-
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-
-        BTNConfirmarLink.setBackground(new java.awt.Color(149, 117, 47));
-        BTNConfirmarLink.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNConfirmarLink.setForeground(new java.awt.Color(0, 0, 153));
-        BTNConfirmarLink.setText("CONFIRMAR");
-        BTNConfirmarLink.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNConfirmarLinkActionPerformed(evt);
+        TXTPIX.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TXTPIXKeyReleased(evt);
             }
         });
 
-        BTNCancelarBoleto.setBackground(new java.awt.Color(149, 117, 47));
-        BTNCancelarBoleto.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNCancelarBoleto.setForeground(new java.awt.Color(153, 0, 0));
-        BTNCancelarBoleto.setText("CANCELAR");
-        BTNCancelarBoleto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNCancelarBoletoActionPerformed(evt);
-            }
-        });
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("TOTAL A PAGAR:");
-
-        LABELTotalLink.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        LABELTotalLink.setForeground(new java.awt.Color(204, 0, 0));
-        LABELTotalLink.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LABELTotalLink.setText("0.00");
-
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel14.setText("Valor:");
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel18.setText("Link de pgt.:");
 
         TXTLink.setBackground(new java.awt.Color(255, 255, 255));
         TXTLink.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TXTLink.setForeground(new java.awt.Color(0, 0, 0));
         TXTLink.setText("0.00");
         TXTLink.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LABELTotalLink, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TXTLink))
-                            .addComponent(BTNConfirmarLink, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarBoleto, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LABELTotalLink)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TXTLink, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTNConfirmarLink, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BTNCancelarBoleto, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        TABBEDPANEMain.addTab("Link de Pagamento", jPanel6);
-
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
-
-        BTNConfirmarCredito.setBackground(new java.awt.Color(149, 117, 47));
-        BTNConfirmarCredito.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNConfirmarCredito.setForeground(new java.awt.Color(0, 0, 153));
-        BTNConfirmarCredito.setText("CONFIRMAR");
-        BTNConfirmarCredito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNConfirmarCreditoActionPerformed(evt);
+        TXTLink.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TXTLinkKeyReleased(evt);
             }
         });
 
-        BTNCancelarCredito.setBackground(new java.awt.Color(149, 117, 47));
-        BTNCancelarCredito.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        BTNCancelarCredito.setForeground(new java.awt.Color(153, 0, 0));
-        BTNCancelarCredito.setText("CANCELAR");
-        BTNCancelarCredito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BTNCancelarCreditoActionPerformed(evt);
-            }
-        });
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("TOTAL A PAGAR:");
-
-        LABELTotalCredito.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        LABELTotalCredito.setForeground(new java.awt.Color(204, 0, 0));
-        LABELTotalCredito.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LABELTotalCredito.setText("0.00");
-
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel15.setText("Crédito:");
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel19.setText("Crédito:");
 
         TXTCredito.setBackground(new java.awt.Color(255, 255, 255));
         TXTCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -605,8 +318,8 @@ public class ViewportPayments extends javax.swing.JFrame {
         TXTCredito.setText("0.00");
         TXTCredito.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         TXTCredito.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                TXTCreditoKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TXTCreditoKeyReleased(evt);
             }
         });
 
@@ -620,47 +333,165 @@ public class ViewportPayments extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        CHECKDesconto.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        CHECKDesconto.setForeground(new java.awt.Color(102, 102, 102));
+        CHECKDesconto.setText("Desconto de 5% (Pix e Dinheiro)");
+        CHECKDesconto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        CHECKDesconto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CHECKDescontoActionPerformed(evt);
+            }
+        });
+
+        TBDinheiro.setBackground(new java.awt.Color(192, 179, 166));
+        TBDinheiro.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TBDinheiro.setForeground(new java.awt.Color(0, 0, 0));
+        TBDinheiro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/checkbox.png"))); // NOI18N
+        TBDinheiro.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        TBDinheiro.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        TBDinheiro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TBDinheiroActionPerformed(evt);
+            }
+        });
+
+        TBDebito.setBackground(new java.awt.Color(192, 179, 166));
+        TBDebito.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TBDebito.setForeground(new java.awt.Color(0, 0, 0));
+        TBDebito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/checkbox.png"))); // NOI18N
+        TBDebito.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        TBDebito.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        TBPix.setBackground(new java.awt.Color(192, 179, 166));
+        TBPix.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TBPix.setForeground(new java.awt.Color(0, 0, 0));
+        TBPix.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/checkbox.png"))); // NOI18N
+        TBPix.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        TBPix.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        TBLink.setBackground(new java.awt.Color(192, 179, 166));
+        TBLink.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TBLink.setForeground(new java.awt.Color(0, 0, 0));
+        TBLink.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/checkbox.png"))); // NOI18N
+        TBLink.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        TBLink.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        TBCredito.setBackground(new java.awt.Color(192, 179, 166));
+        TBCredito.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TBCredito.setForeground(new java.awt.Color(0, 0, 0));
+        TBCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/checkbox.png"))); // NOI18N
+        TBCredito.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        TBCredito.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LABELTotalCredito, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel15)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LABELAPagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(BTNConfirmarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                        .addComponent(BTNCancelarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TXTLink, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TBLink))
+                            .addComponent(CHECKDesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(82, 82, 82)
+                                        .addComponent(TXTPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel17))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TBPix)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addGap(38, 38, 38)
+                                .addComponent(TXTDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TBDebito)
+                                .addGap(100, 100, 100))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(27, 27, 27)
+                                .addComponent(TXTDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TBDinheiro)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel19)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CBParcelas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TXTCredito))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TXTCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 89, Short.MAX_VALUE)
-                        .addComponent(CBParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(BTNConfirmarCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(TBCredito)))
                 .addContainerGap())
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel10)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LABELTotalCredito)
+                .addComponent(LABELAPagar)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TXTCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CBParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BTNConfirmarCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BTNCancelarCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(CHECKDesconto)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(TBDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TXTCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(TBCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(CBParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(TXTDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(TBDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(TXTDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TXTPIX, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(TBPix, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TXTLink, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TBLink, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BTNConfirmarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BTNCancelarDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        TABBEDPANEMain.addTab("Crédito", jPanel7);
+        jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {BTNConfirmarDinheiro, jLabel1});
+
+        TABBEDPANEMain.addTab("Métodos de Pagamento", jPanel3);
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -759,7 +590,7 @@ public class ViewportPayments extends javax.swing.JFrame {
                                         .addComponent(jLabel28)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TXTReferencia, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                                    .addComponent(TXTReferencia, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
                                     .addComponent(TXTTelefone))))))
                 .addContainerGap())
         );
@@ -810,16 +641,6 @@ public class ViewportPayments extends javax.swing.JFrame {
             }
         });
 
-        CHECKDesconto.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
-        CHECKDesconto.setForeground(new java.awt.Color(153, 0, 0));
-        CHECKDesconto.setText("Deconto de 5% (Pix e Dinheiro)");
-        CHECKDesconto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CHECKDesconto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CHECKDescontoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -831,18 +652,15 @@ public class ViewportPayments extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(BTNConfirmarFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BTNCancelarFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(CHECKDesconto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(BTNCancelarFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(CHECKDesconto)
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BTNConfirmarFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BTNCancelarFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -888,14 +706,10 @@ public class ViewportPayments extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         LABELTotalVenda.setText(String.valueOf(this.totalPrice));
         
-        LABELTotalDinheiro.setText(String.valueOf(this.totalPrice));
+        LABELAPagar.setText(String.valueOf(this.totalPrice));
         
         UpdateSelectedIndex(0);
     }//GEN-LAST:event_formWindowActivated
-
-    private void CBParcelasPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_CBParcelasPropertyChange
-
-    }//GEN-LAST:event_CBParcelasPropertyChange
 
     private void BUTTONPreencherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BUTTONPreencherActionPerformed
         AddressModel c = new AddressModel();
@@ -907,84 +721,18 @@ public class ViewportPayments extends javax.swing.JFrame {
     }//GEN-LAST:event_BUTTONPreencherActionPerformed
 
     private void BTNConfirmarDinheiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarDinheiroActionPerformed
-        totalPaid += Double.parseDouble(TXTDinheiro.getText());
-        totalInCash += Double.parseDouble(TXTDinheiro.getText());
-        
-        if(totalPrice - totalPaid > 0){
-            LABELTotalDebito.setText(String.valueOf(totalPrice - totalPaid));
-        
+        if(totalPrice - totalPaid > 0){       
             UpdateSelectedIndex(1);
         }
         else{
-            UpdateSelectedIndex(5);
+            UpdateSelectedIndex(0);
+            JOptionPane.showMessageDialog(null, "Não pagou todo o valor da compra!");
         }
     }//GEN-LAST:event_BTNConfirmarDinheiroActionPerformed
-
-    private void BTNConfirmarDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarDebitoActionPerformed
-        totalPaid += Double.parseDouble(TXTDebito.getText());
-        
-        if(totalPrice - totalPaid > 0){
-            LABELTotalPIX.setText(String.valueOf(totalPrice - totalPaid));
-        
-            UpdateSelectedIndex(2);
-        }
-        else{
-            UpdateSelectedIndex(5);
-        }
-    }//GEN-LAST:event_BTNConfirmarDebitoActionPerformed
-
-    private void BTNConfirmarPIXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarPIXActionPerformed
-        totalPaid += Double.parseDouble(TXTPIX.getText());
-        totalInCash += Double.parseDouble(TXTPIX.getText());
-        
-        if(totalPrice - totalPaid > 0){
-            LABELTotalLink.setText(String.valueOf(totalPrice - totalPaid));
-        
-            UpdateSelectedIndex(3);
-        }
-        else{
-            UpdateSelectedIndex(5);
-        }
-    }//GEN-LAST:event_BTNConfirmarPIXActionPerformed
-
-    private void BTNConfirmarLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarLinkActionPerformed
-        totalPaid += Double.parseDouble(TXTLink.getText());
-        
-        if(totalPrice - totalPaid > 0){
-            LABELTotalCredito.setText(String.valueOf(totalPrice - totalPaid));
-        
-            UpdateSelectedIndex(4);
-        }
-        else{
-            UpdateSelectedIndex(5);
-        }
-    }//GEN-LAST:event_BTNConfirmarLinkActionPerformed
-
-    private void BTNConfirmarCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarCreditoActionPerformed
-        totalPaid += Double.parseDouble(TXTCredito.getText());
-        
-        UpdateSelectedIndex(5);
-    }//GEN-LAST:event_BTNConfirmarCreditoActionPerformed
 
     private void BTNCancelarDinheiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCancelarDinheiroActionPerformed
         this.dispose();
     }//GEN-LAST:event_BTNCancelarDinheiroActionPerformed
-
-    private void BTNCancelarDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCancelarDebitoActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_BTNCancelarDebitoActionPerformed
-
-    private void BTNCancelarPIXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCancelarPIXActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_BTNCancelarPIXActionPerformed
-
-    private void BTNCancelarBoletoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCancelarBoletoActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_BTNCancelarBoletoActionPerformed
-
-    private void BTNCancelarCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCancelarCreditoActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_BTNCancelarCreditoActionPerformed
 
     private void BTNConfirmarFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNConfirmarFinalizarActionPerformed
         if (totalPaid >= totalPrice){
@@ -1021,18 +769,52 @@ public class ViewportPayments extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BTNCancelarFinalizarActionPerformed
 
-    private void TXTCreditoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTCreditoKeyTyped
-        UpdateCBParcelas();
-    }//GEN-LAST:event_TXTCreditoKeyTyped
+    private void CBParcelasPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_CBParcelasPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CBParcelasPropertyChange
 
     private void CHECKDescontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CHECKDescontoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CHECKDescontoActionPerformed
 
-    private void TXTDinheiroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTDinheiroKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TXTDinheiroKeyTyped
+    private void TXTDebitoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTDebitoKeyReleased
+        UpdateTotals();
+    }//GEN-LAST:event_TXTDebitoKeyReleased
 
+    private void TXTPIXKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTPIXKeyReleased
+        UpdateTotals();
+    }//GEN-LAST:event_TXTPIXKeyReleased
+
+    private void TXTLinkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTLinkKeyReleased
+        UpdateTotals();
+    }//GEN-LAST:event_TXTLinkKeyReleased
+
+    private void TXTCreditoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTCreditoKeyReleased
+        UpdateTotals();
+    }//GEN-LAST:event_TXTCreditoKeyReleased
+
+    private void TXTDinheiroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTDinheiroKeyReleased
+        UpdateTotals();
+    }//GEN-LAST:event_TXTDinheiroKeyReleased
+
+    private void TBDinheiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TBDinheiroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TBDinheiroActionPerformed
+
+    private void UpdateTotals(){
+        double dinheiro = Double.parseDouble( TXTDinheiro.getText() );
+        double debito = Double.parseDouble( TXTDebito.getText() );
+        double pix = Double.parseDouble( TXTPIX.getText() );
+        double link = Double.parseDouble( TXTLink.getText() );
+        double credito = Double.parseDouble( TXTCredito.getText() );
+        
+        this.totalPaid = dinheiro + debito + pix + link + credito;
+        
+        double remainsToPay = this.totalPrice - this.totalPaid;
+        
+        LABELAPagar.setText( String.valueOf( remainsToPay ) );
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -1059,28 +841,21 @@ public class ViewportPayments extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BTNCancelarBoleto;
-    private javax.swing.JButton BTNCancelarCredito;
-    private javax.swing.JButton BTNCancelarDebito;
     private javax.swing.JButton BTNCancelarDinheiro;
     private javax.swing.JButton BTNCancelarFinalizar;
-    private javax.swing.JButton BTNCancelarPIX;
-    private javax.swing.JButton BTNConfirmarCredito;
-    private javax.swing.JButton BTNConfirmarDebito;
     private javax.swing.JButton BTNConfirmarDinheiro;
     private javax.swing.JButton BTNConfirmarFinalizar;
-    private javax.swing.JButton BTNConfirmarLink;
-    private javax.swing.JButton BTNConfirmarPIX;
     private javax.swing.JButton BUTTONPreencher;
     private javax.swing.JComboBox<String> CBParcelas;
     private javax.swing.JCheckBox CHECKDesconto;
-    private javax.swing.JLabel LABELTotalCredito;
-    private javax.swing.JLabel LABELTotalDebito;
-    private javax.swing.JLabel LABELTotalDinheiro;
-    private javax.swing.JLabel LABELTotalLink;
-    private javax.swing.JLabel LABELTotalPIX;
+    private javax.swing.JLabel LABELAPagar;
     private javax.swing.JLabel LABELTotalVenda;
     private javax.swing.JTabbedPane TABBEDPANEMain;
+    private javax.swing.JToggleButton TBCredito;
+    private javax.swing.JToggleButton TBDebito;
+    private javax.swing.JToggleButton TBDinheiro;
+    private javax.swing.JToggleButton TBLink;
+    private javax.swing.JToggleButton TBPix;
     private javax.swing.JTextField TXTCEP;
     private javax.swing.JTextField TXTCredito;
     private javax.swing.JTextField TXTDebito;
@@ -1092,11 +867,10 @@ public class ViewportPayments extends javax.swing.JFrame {
     private javax.swing.JTextField TXTReferencia;
     private javax.swing.JTextField TXTTelefone;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -1105,16 +879,9 @@ public class ViewportPayments extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     // End of variables declaration//GEN-END:variables
